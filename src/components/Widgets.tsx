@@ -2,7 +2,19 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import ListView from '../widgets/listview';
 
-export default class Home extends React.Component<RouteComponentProps<{}>, {}> {
+interface WidgetsState {
+  listViewSelectedIndex: number;
+}
+
+export default class Widgets extends React.Component<RouteComponentProps<{}>, WidgetsState> {
+  constructor(props: RouteComponentProps<{}>) {
+    super(props);
+
+    this.state = {
+      listViewSelectedIndex: 0
+    };
+  }
+
   public render() {
     return (
     <div>
@@ -14,9 +26,10 @@ export default class Home extends React.Component<RouteComponentProps<{}>, {}> {
       <ListView
         style={{ width: '300px' }}
         items={['I am boring', 'I am selected', 'I am boring', 'I am boring']}
-        display={item => item}
-        tooltip={item => item}
-        selected={item => item === 'I am selected'}
+        display={(item, i) => item}
+        tooltip={(item, i) => item}
+        selected={(item, i) => i === this.state.listViewSelectedIndex}
+        itemClick={(item, i) => this.setState({ ...this.state, listViewSelectedIndex: i })}
       />
     </div>
     );
