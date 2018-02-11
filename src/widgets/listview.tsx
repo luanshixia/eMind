@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { CommonProps, classNames } from './shared';
+import './shared.css';
 
 type TItem = any;
-type ListItemContent = string | React.Component;
+type ListItemContent = string | React.Component | JSX.Element;
 
 interface ListViewProps extends CommonProps {
   items: TItem[];
@@ -18,8 +19,8 @@ const ListView = ({ id, cls, style, items, display, tooltip, itemClass, selected
   return (
     <ul
       id={id}
-      className={[...cls || [], 'list-group'].join(' ')}
-      style={{ ...style, userSelect: 'none' }}
+      className={classNames(cls, 'list-group')}
+      style={{ ...style, userSelect: 'none', overflowY: 'scroll' }}
     >
       {items.map((item, i) =>
         <li
