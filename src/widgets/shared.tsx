@@ -23,3 +23,9 @@ export function classNames(...args: ClassNamesArgument[]) {
   });
   return resultArr.filter(key => key !== '').join(' ');
 }
+
+export function toggleArrayElement<T>(array: T[], element: T) {
+  return array.includes(element)
+    ? array.filter(ele => ele !== element)
+    : [...array, element];
+}

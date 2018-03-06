@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { toggleArrayElement } from '../widgets/shared';
 import ListView from '../widgets/listview';
+import TreeView from '../widgets/treeview';
 
 interface WidgetsState {
   listView1SelectedIndex: number;
   listView2SelectedIndex: number;
   listView3SelectedIndex: number;
+  treeView1ExpandedNodes: string[];
 }
 
 interface IconShowcaseProps {
@@ -20,6 +23,7 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
       listView1SelectedIndex: 0,
       listView2SelectedIndex: 0,
       listView3SelectedIndex: 0,
+      treeView1ExpandedNodes: ['0'],
     };
   }
 
@@ -43,6 +47,36 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
           <span>{name}</span>
         </span>
       );
+    };
+
+    const simpleTreeData = {
+      'header': 'Root',
+      'children': [
+        {
+          'header': '1',
+          'children': [
+            { 'header': '1.1' },
+            { 'header': '1.2' },
+            { 'header': '1.3' },
+          ]
+        },
+        {
+          'header': '2',
+          'children': [
+            { 'header': '2.1' },
+            { 'header': '2.2' },
+            { 'header': '2.3' },
+          ]
+        },
+        {
+          'header': '3',
+          'children': [
+            { 'header': '3.1' },
+            { 'header': '3.2' },
+            { 'header': '3.3' },
+          ]
+        },
+      ]
     };
 
     return (
@@ -80,6 +114,17 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
         tooltip={(item, i) => item}
         selected={(item, i) => i === this.state.listView3SelectedIndex}
         itemClick={(item, i) => this.setState({ ...this.state, listView3SelectedIndex: i })}
+      />
+
+      <h2>TreeView</h2>
+      <p>Basic TreeView.</p>
+      <TreeView
+        style={{ width: '300px' }}
+        data={simpleTreeData}
+        children={(data, position) => data['children']}
+        display={(data, position) => data['header']}
+        expanded={(data, position) => this.state.treeView1ExpandedNodes.includes(position.join(','))}
+        itemHandleClick={(data, position) => this.setState({ ...this.state, treeView1ExpandedNodes: toggleArrayElement(this.state.treeView1ExpandedNodes, position.join(',')) })}
       />
     </div>
     );
