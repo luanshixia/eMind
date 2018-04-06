@@ -27,19 +27,18 @@ function TreeViewItem(props: TreeItemProps): JSX.Element {
     <div className="tree-item">
       <div className="tree-item-head">
         <span
-          className={props.expanded(props.data, props.position) ? 'glyphicon glyphicon-menu-down' : 'glyphicon glyphicon-menu-right'}
+          className={classNames(['tree-item-handle', props.expanded(props.data, props.position) ? 'glyphicon glyphicon-menu-down' : 'glyphicon glyphicon-menu-right'])}
           onClick={() => props.itemHandleClick && props.itemHandleClick(props.data, props.position)}
         >
         </span>
         <span
-          className={props.selected && props.selected(props.data, props.position) ? 'active' : undefined}
+          className={classNames(['tree-item-content', props.selected && props.selected(props.data, props.position) ? 'active' : ''])}
           title={props.tooltip ? props.tooltip(props.data, props.position) : undefined}
           onClick={() => props.itemContentClick && props.itemContentClick(props.data, props.position)}
         >
           {props.display(props.data, props.position)}
         </span>
       </div>
-      {/* {props.position.length === 1 && <TreeViewItem {...itemProps} key={0} data={props.data.children[0]} position={[0, 0]} />} */}
       {props.children(props.data, props.position) && props.expanded(props.data, props.position) &&
       <div className="tree-item-body">
         {props.children(props.data, props.position).map((item, i) =>

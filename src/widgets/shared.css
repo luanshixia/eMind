@@ -19,3 +19,11 @@
 ul.border li.list-group-item {
   box-sizing: content-box;
 } */
+
+.tree-item-body {
+  margin-left: 10px;
+}
+
+.tree-item-handle {
+  margin: 5px;
+}

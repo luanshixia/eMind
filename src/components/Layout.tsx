@@ -11,6 +11,7 @@ export class Layout extends React.Component<{}, {}> {
         </div>
         <div className="col-sm-9">
           {this.props.children}
+          <footer style={{ marginTop: 100, marginBottom: 50 }}>2018 Yang Wang</footer>
         </div>
       </div>
     </div>
