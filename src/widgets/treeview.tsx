@@ -21,7 +21,7 @@ interface TreeItemProps extends TreeViewProps {
   position: number[];
 }
 
-const TreeViewItem: (props: TreeItemProps) => JSX.Element = (props) => {
+function TreeViewItem(props: TreeItemProps): JSX.Element {
   const itemProps = Object.assign({}, props);
   return (
     <div className="tree-item">
@@ -39,14 +39,15 @@ const TreeViewItem: (props: TreeItemProps) => JSX.Element = (props) => {
           {props.display(props.data, props.position)}
         </span>
       </div>
-      {props.expanded(props.data, props.position) &&
+      {/* {props.position.length === 1 && <TreeViewItem {...itemProps} key={0} data={props.data.children[0]} position={[0, 0]} />} */}
+      {props.children(props.data, props.position) && props.expanded(props.data, props.position) &&
       <div className="tree-item-body">
         {props.children(props.data, props.position).map((item, i) =>
-          <TreeViewItem key={i} data={item} position={[...props.position, i]} {...itemProps} />)}
+          <TreeViewItem {...itemProps} key={[...props.position, i].join(',')} data={item} position={[...props.position, i]} />)}
       </div>}
     </div>
   );
-};
+}
 
 const TreeView = (props: TreeViewProps) => {
   const itemProps = Object.assign({}, props);
