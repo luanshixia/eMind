@@ -9,7 +9,6 @@ interface TableProps extends CommonProps {
   rows: TRow[];
   rowClass?: (row: TRow, i: number) => string;
   cellClick?: (row: TRow, i: number, j: number) => void;
-  showHeader?: boolean;
   headerRowClass?: string;
   children: any[];
 }
@@ -23,8 +22,9 @@ interface TableColumnProps extends CommonProps {
   tooltip?: (row: TRow, i: number) => string;
 }
 
-export const Table = ({ id, cls, style, children, rows, rowClass, cellClick, showHeader, headerRowClass }: TableProps) => {
+export const Table = ({ id, cls, style, children, rows, rowClass, cellClick, headerRowClass }: TableProps) => {
   const columns = children || [];
+  const showHeader = columns.some(col => col.props.header);
   return (
     <table
       id={id}
@@ -51,7 +51,7 @@ export const Table = ({ id, cls, style, children, rows, rowClass, cellClick, sho
               >
                 {col.props.header}
               </td>)}
-          </tr>)}
+          </tr>
         </thead>
       }
       <tbody>

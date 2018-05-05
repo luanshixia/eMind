@@ -7,7 +7,7 @@ type TreeItemContent = string | React.Component | JSX.Element;
 
 interface TreeViewProps extends CommonProps {
   data: TreeData;
-  children: (item: TreeData, position: number[]) => TreeData[];
+  items: (item: TreeData, position: number[]) => TreeData[];
   display: (item: TreeData, position: number[]) => TreeItemContent;
   tooltip?: (item: TreeData, position: number[]) => string;
   itemClass?: (item: TreeData, position: number[]) => string;
@@ -39,9 +39,9 @@ function TreeViewItem(props: TreeItemProps): JSX.Element {
           {props.display(props.data, props.position)}
         </span>
       </div>
-      {props.children(props.data, props.position) && props.expanded(props.data, props.position) &&
+      {props.items(props.data, props.position) && props.expanded(props.data, props.position) &&
       <div className="tree-item-body">
-        {props.children(props.data, props.position).map((item, i) =>
+        {props.items(props.data, props.position).map((item, i) =>
           <TreeViewItem {...itemProps} key={[...props.position, i].join(',')} data={item} position={[...props.position, i]} />)}
       </div>}
     </div>

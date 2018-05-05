@@ -122,7 +122,7 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
       <TreeView
         style={{ width: '300px' }}
         data={simpleTreeData}
-        children={(data, position) => data['children']}
+        items={(data, position) => data['children']}
         display={(data, position) => data['header']}
         expanded={(data, position) => this.state.treeView1ExpandedNodes.includes(position.join(','))}
         itemHandleClick={(data, position) => this.setState({ ...this.state, treeView1ExpandedNodes: toggleArrayElement(this.state.treeView1ExpandedNodes, position.join(',')) })}
