@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { toggleArrayElement } from '../widgets/shared';
 import ListView from '../widgets/listview';
 import TreeView from '../widgets/treeview';
+import { Table, Column } from '../widgets/table';
 
 interface WidgetsState {
   listView1SelectedIndex: number;
@@ -126,6 +127,15 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
         expanded={(data, position) => this.state.treeView1ExpandedNodes.includes(position.join(','))}
         itemHandleClick={(data, position) => this.setState({ ...this.state, treeView1ExpandedNodes: toggleArrayElement(this.state.treeView1ExpandedNodes, position.join(',')) })}
       />
+
+      <h2>Table</h2>
+      <p>Basic Table.</p>
+      <Table
+        rows={Array.from(Array(10).keys())}
+      >
+        <Column header="Number" display={(r, i) => r} />
+        <Column header="Square" display={(r, i) => r * r} />
+      </Table>
     </div>
     );
   }
