@@ -3,7 +3,7 @@ import { CommonProps, classNames } from './shared';
 import './shared.css';
 
 type TItem = any;
-type ListItemContent = string | React.Component | JSX.Element;
+type ListItemContent = string | number | React.Component | JSX.Element;
 
 interface ListViewProps extends CommonProps {
   items: TItem[];

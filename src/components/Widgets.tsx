@@ -10,6 +10,7 @@ interface WidgetsState {
   listView2SelectedIndex: number;
   listView3SelectedIndex: number;
   treeView1ExpandedNodes: string[];
+  treeView2ExpandedNodes: string[];
 }
 
 interface IconShowcaseProps {
@@ -25,6 +26,7 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
       listView2SelectedIndex: 0,
       listView3SelectedIndex: 0,
       treeView1ExpandedNodes: ['0'],
+      treeView2ExpandedNodes: ['0'],
     };
   }
 
@@ -126,6 +128,16 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
         display={(data, position) => data['header']}
         expanded={(data, position) => this.state.treeView1ExpandedNodes.includes(position.join(','))}
         itemHandleClick={(data, position) => this.setState({ ...this.state, treeView1ExpandedNodes: toggleArrayElement(this.state.treeView1ExpandedNodes, position.join(',')) })}
+      />
+
+      <p>Infinite TreeView.</p>
+      <TreeView
+        style={{ width: '300px' }}
+        data={'Root'}
+        items={(data, position) => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+        display={(data, position) => 'Hello ' + data}
+        expanded={(data, position) => this.state.treeView2ExpandedNodes.includes(position.join(','))}
+        itemHandleClick={(data, position) => this.setState({ ...this.state, treeView2ExpandedNodes: toggleArrayElement(this.state.treeView2ExpandedNodes, position.join(',')) })}
       />
 
       <h2>Table</h2>

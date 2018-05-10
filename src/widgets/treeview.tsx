@@ -3,7 +3,7 @@ import { CommonProps, classNames } from './shared';
 import './shared.css';
 
 type TreeData = any;
-type TreeItemContent = string | React.Component | JSX.Element;
+type TreeItemContent = string | number | React.Component | JSX.Element;
 
 interface TreeViewProps extends CommonProps {
   data: TreeData;
