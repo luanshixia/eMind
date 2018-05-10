@@ -21,16 +21,21 @@ export function getBase62ShortID(length: number) {
   return chars.join('');
 }
 
+interface NodeSpec {
+  content: string;
+  children?: NodeSpec[];
+}
+
 export class Node {
   content: string;
-  parent: Node;
+  parent?: Node;
   children: Node[];
 
-  width: number;
-  height: number;
-  totalHeight: number;
-  left: number;
-  top: number;
+  width: number = 100;
+  height: number = 30;
+  totalHeight: number = 30;
+  left: number = 0;
+  top: number = 0;
 
   id: string;
   linkId: string;
@@ -44,8 +49,8 @@ export class Node {
     return this.top + this.height;
   }
 
-  static fromSpecObject(specObject: any) {
-    const node = new Node(specObject.content, ...(specObject.children || []).map(child => Node.fromSpecObject(child)));
+  static fromSpecObject(specObject: NodeSpec) {
+    const node: Node = new Node(specObject.content, ...(specObject.children || []).map(child => Node.fromSpecObject(child)));
     node.updateAllRecursively();
     return node;
   }
@@ -65,11 +70,11 @@ export class Node {
     this.textId = this.id + '-text';
   }
 
-  toSpecObject() {
+  toSpecObject(): NodeSpec {
     return {
       content: this.content,
       children: this.children.length ? this.children.map(node => node.toSpecObject()) : undefined
-    }
+    };
   }
 
   toSpecString() {
@@ -83,10 +88,11 @@ export class Node {
   toSvgString() {
     let link = '';
     if (!this.isRoot()) {
+      const parent = this.parent as Node;
       const [x0, y0] = [this.left, this.top + this.height / 2];
-      const [x, y] = [this.parent.right, this.parent.top + this.parent.height / 2];
+      const [x, y] = [parent.right, parent.top + parent.height / 2];
       const [x1, y1] = [this.left - cpOffset, this.top + this.height / 2 ];
-      const [x2, y2] = [this.parent.right + cpOffset, this.parent.top + this.parent.height / 2];
+      const [x2, y2] = [parent.right + cpOffset, parent.top + parent.height / 2];
       link = `<path id="${this.linkId}" class="${linkClass}" d="M${x0} ${y0} C ${x1} ${y1}, ${x2} ${y2}, ${x} ${y}" stroke="black" fill="transparent" />`;
     }
 
@@ -106,9 +112,9 @@ export class Node {
     this.children.push(node);
   }
 
-  walk(action: (Node) => void) {
+  walk(action: (node: Node) => void) {
     action(this);
-    this.children.forEach(node => node.walk(action))
+    this.children.forEach(node => node.walk(action));
   }
 
   updateWidth() {
@@ -146,7 +152,7 @@ export class Node {
     if (this.isRoot()) {
       this.left = -this.width / 2;
     } else {
-      this.left = this.parent.right + hMargin;
+      this.left = (this.parent as Node).right + hMargin;
     }
   }
 
