@@ -25,5 +25,35 @@ ul.border li.list-group-item {
 }
 
 .tree-item-handle {
-  margin: 5px;
+  margin: 6px;
+}
+
+.tree-item-content {
+  box-sizing: border-box;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.tree-item-content:hover {
+  color: initial;
+  background-color: whitesmoke;
+}
+
+.tree-item-content.active {
+  color: white;
+  background-color: #428bca;
+}
+
+tbody .table-row:hover {
+  color: initial;
+  background-color: whitesmoke;
+}
+
+.list-group-item:hover {
+  color: initial;
+  background-color: whitesmoke;
+}
+
+thead {
+  font-weight: bold;
 }
