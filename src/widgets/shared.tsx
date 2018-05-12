@@ -31,9 +31,14 @@ export function toggleArrayElement<T>(array: T[], element: T): ToggleArrayElemen
     : [[...array, element], true];
 }
 
-export function walkTree<T>(root: T, rootPosision: number[], children: (node: T) => T[] | undefined, action: (node: T) => void, proceed?: (node: T, position: number[]) => boolean) {
-  action(root);
+export function walkTree<T>(
+  root: T,
+  rootPosision: number[],
+  children: (node: T, position: number[]) => T[],
+  action: (node: T, position: number[]) => void,
+  proceed?: (node: T, position: number[]) => boolean) {
+  action(root, rootPosision);
   if (proceed && proceed(root, rootPosision)) {
-    (children(root) || []).forEach((node, i) => walkTree(node, [...rootPosision, i], children, action, proceed));
+    children(root, rootPosision).forEach((node, i) => walkTree(node, [...rootPosision, i], children, action, proceed));
   }
 }

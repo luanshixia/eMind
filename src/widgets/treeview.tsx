@@ -82,17 +82,22 @@ export const PTreeView = (props: PTreeViewProps) => {
 };
 
 export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
-  initialized = false;
-
   constructor(props: CTreeViewProps) {
     super(props);
 
     const expandedNodes: string[] = [];
     const selectedNodes: string[] = [];
 
-    // walkTree(this.props.data, [0], this.props.items, node => {
+    walkTree(this.props.data, [0], this.props.items, (node, pos) => {
+      if (this.props.initiallyExpanded && this.props.initiallyExpanded(node, pos)) {
+        expandedNodes.push(pos.join(','));
+      }
 
-    // }, this.props.initiallyExpanded);
+      if (this.props.initiallySelected && this.props.initiallySelected(node, pos)) {
+        selectedNodes[0] = pos.join(',');
+      }
+    // tslint:disable-next-line:align
+    }, this.props.initiallyExpanded);
 
     this.state = { expandedNodes, selectedNodes };
     this.isExpanded = this.isExpanded.bind(this);
@@ -118,15 +123,11 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
   }
 
   isExpanded(item: TreeData, position: number[]) {
-    return this.initialized
-      ? this.state.expandedNodes.includes(position.join(','))
-      : this.initiallyExpanded(item, position);
+    return this.state.expandedNodes.includes(position.join(','));
   }
 
   isSelected(item: TreeData, position: number[]) {
-    return this.initialized
-      ? this.state.selectedNodes[0] === position.join(',')
-      : this.initiallySelected(item, position);
+    return this.state.selectedNodes[0] === position.join(',');
   }
 
   toggleExpansion(position: number[]) {
@@ -161,7 +162,7 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
   }
 
   render() {
-    const pTreeView = (
+    return (
     <PTreeView
       id={this.props.id}
       cls={this.props.cls}
@@ -175,8 +176,5 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
       onItemContentClick={this.itemContentClick}
     />
     );
-
-    this.initialized = true;
-    return pTreeView;
   }
 }
