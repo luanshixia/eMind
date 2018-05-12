@@ -5,6 +5,7 @@ export interface CommonProps {
 }
 
 type ClassNamesArgument = string | string[] | { [key: string]: boolean } | undefined;
+type ToggleArrayElementResult = [any[], boolean];
 
 export function classNames(...args: ClassNamesArgument[]) {
   let resultArr: string[] = [];
@@ -24,8 +25,15 @@ export function classNames(...args: ClassNamesArgument[]) {
   return resultArr.filter(key => key !== '').join(' ');
 }
 
-export function toggleArrayElement<T>(array: T[], element: T) {
+export function toggleArrayElement<T>(array: T[], element: T): ToggleArrayElementResult {
   return array.includes(element)
-    ? array.filter(ele => ele !== element)
-    : [...array, element];
+    ? [array.filter(ele => ele !== element), false]
+    : [[...array, element], true];
+}
+
+export function walkTree<T>(root: T, rootPosision: number[], children: (node: T) => T[] | undefined, action: (node: T) => void, proceed?: (node: T, position: number[]) => boolean) {
+  action(root);
+  if (proceed && proceed(root, rootPosision)) {
+    (children(root) || []).forEach((node, i) => walkTree(node, [...rootPosision, i], children, action, proceed));
+  }
 }

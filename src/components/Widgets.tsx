@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { toggleArrayElement } from '../widgets/shared';
 import ListView from '../widgets/listview';
-import TreeView from '../widgets/treeview';
+import { PTreeView, CTreeView } from '../widgets/treeview';
 import { Table, Column } from '../widgets/table';
 
 interface WidgetsState {
@@ -125,27 +125,45 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
 
       <h2>TreeView</h2>
       <p>Basic TreeView.</p>
-      <TreeView
+      <PTreeView
         style={{ width: '300px' }}
         data={simpleTreeData}
         items={(data, position) => data['children']}
         display={(data, position) => data['header']}
         expanded={(data, position) => this.state.treeView1ExpandedNodes.includes(position.join(','))}
         selected={(data, position) => this.state.treeView1SelectedNode === position.join(',')}
-        itemHandleClick={(data, position) => this.setState({ ...this.state, treeView1ExpandedNodes: toggleArrayElement(this.state.treeView1ExpandedNodes, position.join(',')) })}
-        itemContentClick={(data, position) => this.setState({ ...this.state, treeView1SelectedNode: position.join(',') })}
+        onItemHandleClick={(data, position) => this.setState({ ...this.state, treeView1ExpandedNodes: toggleArrayElement(this.state.treeView1ExpandedNodes, position.join(','))[0] })}
+        onItemContentClick={(data, position) => this.setState({ ...this.state, treeView1SelectedNode: position.join(',') })}
+      />
+
+      <CTreeView
+        style={{ width: '300px' }}
+        data={simpleTreeData}
+        items={(data, position) => data['children']}
+        display={(data, position) => data['header']}
+        initiallyExpanded={(data, position) => position.length < 2}
+        initiallySelected={(data, position) => position.join(',') === '0,0'}
       />
 
       <p>Infinite TreeView.</p>
-      <TreeView
+      <PTreeView
         style={{ width: '300px' }}
         data={'Root'}
         items={(data, position) => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
         display={(data, position) => 'Hello ' + data}
         expanded={(data, position) => this.state.treeView2ExpandedNodes.includes(position.join(','))}
         selected={(data, position) => this.state.treeView2SelectedNode === position.join(',')}
-        itemHandleClick={(data, position) => this.setState({ ...this.state, treeView2ExpandedNodes: toggleArrayElement(this.state.treeView2ExpandedNodes, position.join(',')) })}
-        itemContentClick={(data, position) => this.setState({ ...this.state, treeView2SelectedNode: position.join(',') })}
+        onItemHandleClick={(data, position) => this.setState({ ...this.state, treeView2ExpandedNodes: toggleArrayElement(this.state.treeView2ExpandedNodes, position.join(','))[0] })}
+        onItemContentClick={(data, position) => this.setState({ ...this.state, treeView2SelectedNode: position.join(',') })}
+      />
+
+      <CTreeView
+        style={{ width: '300px' }}
+        data={'Root'}
+        items={(data, position) => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+        display={(data, position) => 'Hello ' + data}
+        initiallyExpanded={(data, position) => position.length < 3}
+        initiallySelected={(data, position) => position.join(',') === '0'}
       />
 
       <h2>Table</h2>

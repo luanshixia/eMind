@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { CommonProps, classNames } from './shared';
+import { CommonProps, classNames, toggleArrayElement, walkTree } from './shared';
 import './shared.css';
 
 type TreeData = any;
 type TreeItemContent = string | number | React.Component | JSX.Element;
 
-interface TreeViewProps extends CommonProps {
+interface PTreeViewProps extends CommonProps {
   data: TreeData;
   items: (item: TreeData, position: number[]) => TreeData[];
   display: (item: TreeData, position: number[]) => TreeItemContent;
@@ -13,11 +13,28 @@ interface TreeViewProps extends CommonProps {
   itemClass?: (item: TreeData, position: number[]) => string;
   expanded: (item: TreeData, position: number[]) => boolean;
   selected?: (item: TreeData, position: number[]) => boolean;
-  itemContentClick?: (item: TreeData, position: number[]) => void;
-  itemHandleClick?: (item: TreeData, position: number[]) => void;
+  onItemHandleClick?: (item: TreeData, position: number[]) => void;
+  onItemContentClick?: (item: TreeData, position: number[]) => void;
 }
 
-interface TreeItemProps extends TreeViewProps {
+interface CTreeViewProps extends CommonProps {
+  data: TreeData;
+  items: (item: TreeData, position: number[]) => TreeData[];
+  display: (item: TreeData, position: number[]) => TreeItemContent;
+  tooltip?: (item: TreeData, position: number[]) => string;
+  itemClass?: (item: TreeData, position: number[]) => string;
+  initiallyExpanded?: (item: TreeData, position: number[]) => boolean;
+  initiallySelected?: (item: TreeData, position: number[]) => boolean;
+  onExpansionChanged?: (item: TreeData, position: number[], expanded: boolean) => void;
+  onSelectionChanged?: (item: TreeData, position: number[], previousPosition: number[]) => void;
+}
+
+interface CTreeViewState {
+  expandedNodes: string[];
+  selectedNodes: string[];
+}
+
+interface TreeItemProps extends PTreeViewProps {
   position: number[];
 }
 
@@ -28,13 +45,13 @@ function TreeViewItem(props: TreeItemProps): JSX.Element {
       <div className="tree-item-head">
         <span
           className={classNames(['tree-item-handle', props.expanded(props.data, props.position) ? 'glyphicon glyphicon-menu-down' : 'glyphicon glyphicon-menu-right'])}
-          onClick={() => props.itemHandleClick && props.itemHandleClick(props.data, props.position)}
+          onClick={() => props.onItemHandleClick && props.onItemHandleClick(props.data, props.position)}
         >
         </span>
         <span
           className={classNames(['tree-item-content', props.selected && props.selected(props.data, props.position) ? 'active' : ''])}
           title={props.tooltip ? props.tooltip(props.data, props.position) : undefined}
-          onClick={() => props.itemContentClick && props.itemContentClick(props.data, props.position)}
+          onClick={() => props.onItemContentClick && props.onItemContentClick(props.data, props.position)}
         >
           {props.display(props.data, props.position)}
         </span>
@@ -48,7 +65,7 @@ function TreeViewItem(props: TreeItemProps): JSX.Element {
   );
 }
 
-const TreeView = (props: TreeViewProps) => {
+export const PTreeView = (props: PTreeViewProps) => {
   const itemProps = Object.assign({}, props);
   delete itemProps.id;
   delete itemProps.cls;
@@ -64,4 +81,102 @@ const TreeView = (props: TreeViewProps) => {
   );
 };
 
-export default TreeView;
+export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
+  initialized = false;
+
+  constructor(props: CTreeViewProps) {
+    super(props);
+
+    const expandedNodes: string[] = [];
+    const selectedNodes: string[] = [];
+
+    // walkTree(this.props.data, [0], this.props.items, node => {
+
+    // }, this.props.initiallyExpanded);
+
+    this.state = { expandedNodes, selectedNodes };
+    this.isExpanded = this.isExpanded.bind(this);
+    this.isSelected = this.isSelected.bind(this);
+    this.itemHandleClick = this.itemHandleClick.bind(this);
+    this.itemContentClick = this.itemContentClick.bind(this);
+  }
+
+  initiallyExpanded(item: TreeData, position: number[]) {
+    if (this.props.initiallyExpanded && this.props.initiallyExpanded(item, position)) {
+      this.state.expandedNodes.push(position.join(','));
+      return true;
+    }
+    return false;
+  }
+
+  initiallySelected(item: TreeData, position: number[]) {
+    if (this.props.initiallySelected && this.props.initiallySelected(item, position)) {
+      this.state.selectedNodes[0] = position.join(',');
+      return true;
+    }
+    return false;
+  }
+
+  isExpanded(item: TreeData, position: number[]) {
+    return this.initialized
+      ? this.state.expandedNodes.includes(position.join(','))
+      : this.initiallyExpanded(item, position);
+  }
+
+  isSelected(item: TreeData, position: number[]) {
+    return this.initialized
+      ? this.state.selectedNodes[0] === position.join(',')
+      : this.initiallySelected(item, position);
+  }
+
+  toggleExpansion(position: number[]) {
+    const [array, added] = toggleArrayElement(this.state.expandedNodes, position.join(','));
+    this.setState({
+      ...this.state,
+      expandedNodes: array
+    });
+    return added;
+  }
+
+  selectNode(position: number[]) {
+    this.setState({
+      ...this.state,
+      selectedNodes: [position.join(',')]
+    });
+  }
+
+  itemHandleClick(item: TreeData, position: number[]) {
+    const expanded = this.toggleExpansion(position);
+    if (this.props.onExpansionChanged) {
+      this.props.onExpansionChanged(item, position, expanded);
+    }
+  }
+
+  itemContentClick(item: TreeData, position: number[]) {
+    const previousSelection = this.state.selectedNodes[0].split(',').map(s => parseInt(s));
+    this.selectNode(position);
+    if (this.props.onSelectionChanged) {
+      this.props.onSelectionChanged(item, position, previousSelection);
+    }
+  }
+
+  render() {
+    const pTreeView = (
+    <PTreeView
+      id={this.props.id}
+      cls={this.props.cls}
+      style={this.props.style}
+      data={this.props.data}
+      items={this.props.items}
+      display={this.props.display}
+      expanded={this.isExpanded}
+      selected={this.isSelected}
+      onItemHandleClick={this.itemHandleClick}
+      onItemContentClick={this.itemContentClick}
+    />
+    );
+
+    this.initialized = true;
+    return pTreeView;
+  }
+}
