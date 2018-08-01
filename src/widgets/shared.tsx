@@ -2,6 +2,7 @@ export interface CommonProps {
   id?: string;
   cls?: string[];
   style?: { [key: string]: string };
+  children?: any;
 }
 
 type ClassNamesArgument = string | string[] | { [key: string]: boolean } | undefined;

@@ -91,7 +91,7 @@ export class Node {
       const parent = this.parent as Node;
       const [x0, y0] = [this.left, this.top + this.height / 2];
       const [x, y] = [parent.right, parent.top + parent.height / 2];
-      const [x1, y1] = [this.left - cpOffset, this.top + this.height / 2 ];
+      const [x1, y1] = [this.left - cpOffset, this.top + this.height / 2];
       const [x2, y2] = [parent.right + cpOffset, parent.top + parent.height / 2];
       link = `<path id="${this.linkId}" class="${linkClass}" d="M${x0} ${y0} C ${x1} ${y1}, ${x2} ${y2}, ${x} ${y}" stroke="black" fill="transparent" />`;
     }
@@ -144,7 +144,9 @@ export class Node {
     if (this.isLeaf()) {
       this.totalHeight = this.height;
     } else {
-      this.totalHeight = this.children.map(node => node.totalHeight).reduce((x, y) => x + y, 0) + vMargin * (this.children.length - 1);
+      this.totalHeight = this.children
+        .map(node => node.totalHeight)
+        .reduce((x, y) => x + y, 0) + vMargin * (this.children.length - 1);
     }
   }
 
@@ -157,7 +159,9 @@ export class Node {
   }
 
   updateLeftRecursively() {
-    this.walk((node: Node) => node.updateLeft());
+    this.walk((node: Node) => {
+      node.updateLeft();
+    });
   }
 
   updateTopRecursively() {
@@ -203,7 +207,9 @@ export class MindMap {
 
   toSvgString() {
     let content = '';
-    this.root.walk((node: Node) => content += node.toSvgString());
+    this.root.walk((node: Node) => {
+      content += node.toSvgString();
+    });
 
     let [left, top, right, bottom] = this.getBoundingBox();
     [left, top, right, bottom] = [left - mapPadding, top - mapPadding, right + mapPadding, bottom + mapPadding];
