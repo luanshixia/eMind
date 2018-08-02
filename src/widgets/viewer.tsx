@@ -12,15 +12,15 @@ interface PViewerProps extends CommonProps {
   scale: number;
   width: number;
   height: number;
-  onMouseMove: React.MouseEventHandler<any>;
-  onMouseDown: React.MouseEventHandler<any>;
-  onMouseUp: React.MouseEventHandler<any>;
-  onWheel: React.WheelEventHandler<any>;
+  onMouseMove?: React.MouseEventHandler<any>;
+  onMouseDown?: React.MouseEventHandler<any>;
+  onMouseUp?: React.MouseEventHandler<any>;
+  onWheel?: React.WheelEventHandler<any>;
 }
 
 interface CViewerProps extends CommonProps {
-  initialOrigin: Point2D;
-  initialScale: number;
+  initialOrigin?: Point2D;
+  initialScale?: number;
   width: number;
   height: number;
 }
@@ -65,8 +65,8 @@ export class CViewer extends React.Component<CViewerProps, CViewerState> {
     };
 
     this.state = {
-      origin: props.initialOrigin,
-      scale: props.initialScale
+      origin: props.initialOrigin || { x: 0, y: 0},
+      scale: props.initialScale || 1
     };
 
     this.updateOrigin = this.updateOrigin.bind(this);
@@ -93,11 +93,16 @@ export class CViewer extends React.Component<CViewerProps, CViewerState> {
       ...this.state,
       scale: e.deltaY > 0 ? 2 * this.state.scale : e.deltaY < 0 ? 0.5 * this.state.scale : this.state.scale
     });
+
+    e.stopPropagation();
   }
 
   render() {
     return (
     <PViewer
+      id={this.props.id}
+      cls={this.props.cls}
+      style={this.props.style}
       origin={this.state.origin}
       scale={this.state.scale}
       width={this.props.width}
