@@ -196,6 +196,17 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
       >
         <svg width="700" height="350" viewBox="-150 -175 700 350" xmlns="http://www.w3.org/2000/svg"><rect id="6HwUtwPH" x="-50" y="-15" width="100" height="30" rx="5" ry="5" stroke="black" fill="transparent" /><text id="6HwUtwPH-text" x="-40" y="7.5" text-anchor="left" font-size="15">Root</text><rect id="B23erRgK" x="150" y="-55" width="100" height="30" rx="5" ry="5" stroke="black" fill="transparent" /><text id="B23erRgK-text" x="160" y="-32.5" text-anchor="left" font-size="15">Children 1</text><path id="B23erRgK-link" d="M150 -40 C 100 -40, 100 0, 50 0" stroke="black" fill="transparent" /><rect id="ylIkI6uG" x="350" y="-75" width="100" height="30" rx="5" ry="5" stroke="black" fill="transparent" /><text id="ylIkI6uG-text" x="360" y="-52.5" text-anchor="left" font-size="15">Children 4</text><path id="ylIkI6uG-link" d="M350 -60 C 300 -60, 300 -40, 250 -40" stroke="black" fill="transparent" /><rect id="Uu1preSG" x="350" y="-35" width="100" height="30" rx="5" ry="5" stroke="black" fill="transparent" /><text id="Uu1preSG-text" x="360" y="-12.5" text-anchor="left" font-size="15">Children 5</text><path id="Uu1preSG-link" d="M350 -20 C 300 -20, 300 -40, 250 -40" stroke="black" fill="transparent" /><rect id="B6a3jwtz" x="150" y="5" width="100" height="30" rx="5" ry="5" stroke="black" fill="transparent" /><text id="B6a3jwtz-text" x="160" y="27.5" text-anchor="left" font-size="15">Children 2</text><path id="B6a3jwtz-link" d="M150 20 C 100 20, 100 0, 50 0" stroke="black" fill="transparent" /><rect id="rXYKG5OM" x="150" y="45" width="100" height="30" rx="5" ry="5" stroke="black" fill="transparent" /><text id="rXYKG5OM-text" x="160" y="67.5" text-anchor="left" font-size="15">Children 3</text><path id="rXYKG5OM-link" d="M150 60 C 100 60, 100 0, 50 0" stroke="black" fill="transparent" /></svg>
       </CViewer>
+
+      <h2>Viewer</h2>
+      <p>Basic Viewer.</p>
+      <CViewer
+        width={300}
+        height={300}
+        style={{ border: '1px solid silver' }}
+      >
+        <img src="https://github.com/luanshixia/SharpDiskSweeper/raw/master/Screenshot.png" alt="img"/>
+        <p>Gets the status of a virtual network gateway. ... The Get-AzureVNetGateway cmdlet gets the status of an existing virtual network gateway. ... This command gets that status of the virtual network gateway for the virtual network named ContosoVN07.</p>
+      </CViewer>
     </div>
     );
   }

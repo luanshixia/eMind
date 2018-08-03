@@ -13,8 +13,8 @@ interface PViewerProps extends CommonProps {
   width: number;
   height: number;
   onMouseMove?: React.MouseEventHandler<any>;
-  onMouseDown?: React.MouseEventHandler<any>;
-  onMouseUp?: React.MouseEventHandler<any>;
+  // onMouseDown?: React.MouseEventHandler<any>;
+  // onMouseUp?: React.MouseEventHandler<any>;
   onWheel?: React.WheelEventHandler<any>;
 }
 
@@ -35,16 +35,17 @@ export const PViewer = (props: PViewerProps) => {
     <div
       id={props.id}
       className="viewer viewer-border"
-      style={{ ...props.style, width: props.width, height: props.height, overflow: 'hidden' }}
+      style={{ ...props.style, width: props.width, height: props.height, overflow: 'hidden', userSelect: 'none' }}
       onMouseMove={props.onMouseMove}
-      onMouseDown={props.onMouseDown}
-      onMouseUp={props.onMouseUp}
+      // onMouseDown={props.onMouseDown}
+      // onMouseUp={props.onMouseUp}
       onWheel={props.onWheel}
     >
       <div
         id={props.id + '-content'}
         className="viewer-content"
         style={{ transform: `translate(${props.origin.x}, ${props.origin.y}) scale(${props.scale})` }}
+        onDragStart={e => e.preventDefault()}
       >
         {props.children}
       </div>
@@ -74,27 +75,27 @@ export class CViewer extends React.Component<CViewerProps, CViewerState> {
   }
 
   updateOrigin(e: React.MouseEvent<any>) {
-    if (e.buttons === 1) {
-      this.setState({
-        ...this.state,
-        origin: {
-          x: this.state.origin.x + (e.pageX - this.tempData.previousPageX),
-          y: this.state.origin.y + (e.pageY - this.tempData.previousPageY)
-        }
-      });
+    // if (e.buttons === 1) {
+    //   this.setState({
+    //     ...this.state,
+    //     origin: {
+    //       x: this.state.origin.x + (e.pageX - this.tempData.previousPageX),
+    //       y: this.state.origin.y + (e.pageY - this.tempData.previousPageY)
+    //     }
+    //   });
+    // }
 
-      this.tempData.previousPageX = e.pageX;
-      this.tempData.previousPageY = e.pageY;
-    }
+    // this.tempData.previousPageX = e.pageX;
+    // this.tempData.previousPageY = e.pageY;
   }
 
   updateScale(e: React.WheelEvent<any>) {
     this.setState({
       ...this.state,
-      scale: e.deltaY > 0 ? 2 * this.state.scale : e.deltaY < 0 ? 0.5 * this.state.scale : this.state.scale
+      scale: e.deltaY < 0 ? 2 * this.state.scale : e.deltaY > 0 ? 0.5 * this.state.scale : this.state.scale
     });
 
-    e.stopPropagation();
+    e.preventDefault();
   }
 
   render() {
@@ -108,8 +109,6 @@ export class CViewer extends React.Component<CViewerProps, CViewerState> {
       width={this.props.width}
       height={this.props.height}
       onMouseMove={this.updateOrigin}
-      onMouseDown={(e) => { this.tempData.previousPageX = e.pageX; this.tempData.previousPageY = e.pageY; }}
-      onMouseUp={(e) => { this.tempData.previousPageX = null; this.tempData.previousPageY = null; }}
       onWheel={this.updateScale}
     >
       {this.props.children}
