@@ -44,7 +44,10 @@ export const PViewer = (props: PViewerProps) => {
       <div
         id={props.id + '-content'}
         className="viewer-content"
-        style={{ transform: `translate(${Math.trunc(props.origin.x)}px, ${Math.trunc(props.origin.y)}px) scale(${props.scale})`, transformOrigin: '0 0' }}
+        style={{
+          transform: `translate(${props.origin.x}px, ${props.origin.y}px) scale(${props.scale})`,
+          transformOrigin: '0 0'
+        }}
         onDragStart={e => e.preventDefault()}
       >
         {props.children}
@@ -90,18 +93,22 @@ export class CViewer extends React.Component<CViewerProps, CViewerState> {
   }
 
   updateScale(e: React.WheelEvent<any>) {
-    const borderElement = e.target as HTMLElement;
+    // const scales = [0.5, 0.8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    const borderElement = e.currentTarget as HTMLElement;
     const rect = borderElement.getBoundingClientRect();
 
     const basePoint = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    const newScale = e.deltaY < 0 ? 2 * this.state.scale : e.deltaY > 0 ? 0.5 * this.state.scale : this.state.scale;
+    const scaleDelta = e.deltaY < 0 ? 1.1 : e.deltaY > 0 ? 0.9 : 1;
     const v1 = { x: basePoint.x - this.state.origin.x, y: basePoint.y - this.state.origin.y };
-    const v2 = { x: (this.state.scale / newScale) * v1.x, y: (this.state.scale / newScale) * v1.y  };
+    const v2 = { x: scaleDelta * v1.x, y: scaleDelta * v1.y  };
 
     this.setState({
-      // ...this.state,
-      origin: { x: this.state.origin.x + v1.x - v2.x, y: this.state.origin.y + v1.y - v2.y },
-      scale: newScale
+      origin: {
+        x: this.state.origin.x + v1.x - v2.x, // (1 - scaleDelta) * v1.x,
+        y: this.state.origin.y + v1.y - v2.y // (1 - scaleDelta) * v1.y
+      },
+      scale: scaleDelta * this.state.scale
     });
 
     e.preventDefault();
