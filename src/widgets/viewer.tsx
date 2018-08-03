@@ -44,7 +44,7 @@ export const PViewer = (props: PViewerProps) => {
       <div
         id={props.id + '-content'}
         className="viewer-content"
-        style={{ transform: `translate(${props.origin.x}, ${props.origin.y}) scale(${props.scale})` }}
+        style={{ transform: `translate(${Math.trunc(props.origin.x)}px, ${Math.trunc(props.origin.y)}px) scale(${props.scale})`, transformOrigin: '0 0' }}
         onDragStart={e => e.preventDefault()}
       >
         {props.children}
@@ -75,24 +75,33 @@ export class CViewer extends React.Component<CViewerProps, CViewerState> {
   }
 
   updateOrigin(e: React.MouseEvent<any>) {
-    // if (e.buttons === 1) {
-    //   this.setState({
-    //     ...this.state,
-    //     origin: {
-    //       x: this.state.origin.x + (e.pageX - this.tempData.previousPageX),
-    //       y: this.state.origin.y + (e.pageY - this.tempData.previousPageY)
-    //     }
-    //   });
-    // }
+    if (e.buttons === 1) {
+      this.setState({
+        ...this.state,
+        origin: {
+          x: this.state.origin.x + (e.pageX - this.tempData.previousPageX),
+          y: this.state.origin.y + (e.pageY - this.tempData.previousPageY)
+        }
+      });
+    }
 
-    // this.tempData.previousPageX = e.pageX;
-    // this.tempData.previousPageY = e.pageY;
+    this.tempData.previousPageX = e.pageX;
+    this.tempData.previousPageY = e.pageY;
   }
 
   updateScale(e: React.WheelEvent<any>) {
+    const borderElement = e.target as HTMLElement;
+    const rect = borderElement.getBoundingClientRect();
+
+    const basePoint = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    const newScale = e.deltaY < 0 ? 2 * this.state.scale : e.deltaY > 0 ? 0.5 * this.state.scale : this.state.scale;
+    const v1 = { x: basePoint.x - this.state.origin.x, y: basePoint.y - this.state.origin.y };
+    const v2 = { x: (this.state.scale / newScale) * v1.x, y: (this.state.scale / newScale) * v1.y  };
+
     this.setState({
-      ...this.state,
-      scale: e.deltaY < 0 ? 2 * this.state.scale : e.deltaY > 0 ? 0.5 * this.state.scale : this.state.scale
+      // ...this.state,
+      origin: { x: this.state.origin.x + v1.x - v2.x, y: this.state.origin.y + v1.y - v2.y },
+      scale: newScale
     });
 
     e.preventDefault();

@@ -204,7 +204,7 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
         height={300}
         style={{ border: '1px solid silver' }}
       >
-        <img src="https://github.com/luanshixia/SharpDiskSweeper/raw/master/Screenshot.png" alt="img"/>
+        {/* <img src="https://github.com/luanshixia/SharpDiskSweeper/raw/master/Screenshot.png" alt="img"/> */}
         <p>Gets the status of a virtual network gateway. ... The Get-AzureVNetGateway cmdlet gets the status of an existing virtual network gateway. ... This command gets that status of the virtual network gateway for the virtual network named ContosoVN07.</p>
       </CViewer>
     </div>
