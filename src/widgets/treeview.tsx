@@ -154,7 +154,8 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
   }
 
   itemContentClick(item: TreeData, position: number[]) {
-    const previousSelection = this.state.selectedNodes[0].split(',').map(s => parseInt(s));
+    const selectedNode = this.state.selectedNodes[0];
+    const previousSelection = selectedNode ? selectedNode.split(',').map(s => parseInt(s)) : [];
     this.selectNode(position);
     if (this.props.onSelectionChanged) {
       this.props.onSelectionChanged(item, position, previousSelection);
