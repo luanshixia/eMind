@@ -2,12 +2,15 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { NodeSpec } from '../core';
 import { CTreeView } from '../widgets/treeview';
+import { CViewer } from '../widgets/viewer';
+import MindMapPresenter from './MindMapPresenter';
 import '../css/workspace.css';
 
 interface WorkspaceProps {
 
 }
 
+// {"content":"Root","children":[{"content":"Children 1","children":[{"content":"Children 4"},{"content":"Children 5"}]},{"content":"Children 2"},{"content":"Children 3"}]}
 interface WorkspaceState {
   mindMapSpec: NodeSpec;
 }
@@ -74,7 +77,13 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
           </div>
         </div>
         <div className="col-md-9">
-
+        <CViewer
+          width={800}
+          height={600}
+          style={{ border: '1px solid silver' }}
+        >
+          <MindMapPresenter specObject={this.state.mindMapSpec} />
+        </CViewer>
         </div>
       </div>
     </div>
