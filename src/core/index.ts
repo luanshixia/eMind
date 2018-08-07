@@ -21,7 +21,7 @@ export function getBase62ShortID(length: number) {
   return chars.join('');
 }
 
-interface NodeSpec {
+export interface NodeSpec {
   content: string;
   children?: NodeSpec[];
 }

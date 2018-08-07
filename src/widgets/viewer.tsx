@@ -92,10 +92,10 @@ export class CViewer extends React.Component<CViewerProps, CViewerState> {
     this.tempData.previousPageY = e.pageY;
   }
 
-  updateScale(e: React.WheelEvent<any>) {
+  updateScale(e: React.WheelEvent<HTMLDivElement>) {
     // const scales = [0.5, 0.8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-    const borderElement = e.currentTarget as HTMLElement;
+    const borderElement = e.currentTarget;
     const rect = borderElement.getBoundingClientRect();
 
     const basePoint = { x: e.clientX - rect.left, y: e.clientY - rect.top };

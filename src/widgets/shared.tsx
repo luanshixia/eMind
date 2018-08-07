@@ -40,6 +40,6 @@ export function walkTree<T>(
   proceed?: (node: T, position: number[]) => boolean) {
   action(root, rootPosision);
   if (proceed && proceed(root, rootPosision)) {
-    children(root, rootPosision).forEach((node, i) => walkTree(node, [...rootPosision, i], children, action, proceed));
+    (children(root, rootPosision) || []).forEach((node, i) => walkTree(node, [...rootPosision, i], children, action, proceed));
   }
 }
