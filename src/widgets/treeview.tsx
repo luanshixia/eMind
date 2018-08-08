@@ -85,6 +85,14 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
   constructor(props: CTreeViewProps) {
     super(props);
 
+    this.state = this.initState();
+    this.isExpanded = this.isExpanded.bind(this);
+    this.isSelected = this.isSelected.bind(this);
+    this.itemHandleClick = this.itemHandleClick.bind(this);
+    this.itemContentClick = this.itemContentClick.bind(this);
+  }
+
+  initState() {
     const expandedNodes: string[] = [];
     const selectedNodes: string[] = [];
 
@@ -99,27 +107,7 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
     // tslint:disable-next-line:align
     }, this.props.initiallyExpanded);
 
-    this.state = { expandedNodes, selectedNodes };
-    this.isExpanded = this.isExpanded.bind(this);
-    this.isSelected = this.isSelected.bind(this);
-    this.itemHandleClick = this.itemHandleClick.bind(this);
-    this.itemContentClick = this.itemContentClick.bind(this);
-  }
-
-  initiallyExpanded(item: TreeData, position: number[]) {
-    if (this.props.initiallyExpanded && this.props.initiallyExpanded(item, position)) {
-      this.state.expandedNodes.push(position.join(','));
-      return true;
-    }
-    return false;
-  }
-
-  initiallySelected(item: TreeData, position: number[]) {
-    if (this.props.initiallySelected && this.props.initiallySelected(item, position)) {
-      this.state.selectedNodes[0] = position.join(',');
-      return true;
-    }
-    return false;
+    return { expandedNodes, selectedNodes };
   }
 
   isExpanded(item: TreeData, position: number[]) {

@@ -1,5 +1,10 @@
 .emind-node.active {
-  fill: azure;
+  fill: #428bca;
+  stroke: #428bca;
+}
+
+.emind-node.active + .emind-text {
+  fill: white;
 }
 
 textarea.form-control {

@@ -13,11 +13,10 @@ interface WorkspaceProps {
 // {"content":"Root","children":[{"content":"Children 1","children":[{"content":"Children 4"},{"content":"Children 5"}]},{"content":"Children 2"},{"content":"Children 3"}]}
 interface WorkspaceState {
   mindMapSpec: NodeSpec;
+  selectedNode?: NodeSpec;
 }
 
 export default class Workspace extends React.Component<RouteComponentProps<WorkspaceProps>, WorkspaceState> {
-  tempData: any;
-
   constructor(props: RouteComponentProps<WorkspaceProps>) {
     super(props);
 
@@ -25,10 +24,6 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
       mindMapSpec: {
         content: 'Root'
       }
-    };
-
-    this.tempData = {
-      selectedNode: null
     };
 
     this.inputChanged = this.inputChanged.bind(this);
@@ -45,23 +40,24 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
     }
 
     this.setState({
-      mindMapSpec: spec
+      mindMapSpec: spec,
+      selectedNode: spec
     });
   }
 
   viewerClick(e: React.MouseEvent<any>) {
     if (e.target instanceof SVGRectElement) {
       const spec = getNodeDict()[e.target.id];
-      this.selectNode(this.tempData.selectedNode, spec);
+      this.selectNode(this.state.selectedNode, spec);
     } else if (e.target instanceof SVGTextElement) {
       const spec = getNodeDict()[e.target.id.replace('-text', '')];
-      this.selectNode(this.tempData.selectedNode, spec);
+      this.selectNode(this.state.selectedNode, spec);
     } else {
-      this.selectNode(this.tempData.selectedNode, null);
+      this.selectNode(this.state.selectedNode);
     }
   }
 
-  selectNode(oldNode: NodeSpec, newNode: NodeSpec | null) {
+  selectNode(oldNode?: NodeSpec, newNode?: NodeSpec) {
     if (oldNode) {
       delete oldNode.cls;
     }
@@ -70,9 +66,9 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
       newNode.cls = ['active'];
     }
 
-    this.tempData.selectedNode = newNode;
     this.setState({
-      mindMapSpec: this.state.mindMapSpec
+      mindMapSpec: this.state.mindMapSpec,
+      selectedNode: newNode
     });
   }
 
@@ -85,29 +81,22 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
       <div className="row">
         <div className="col-md-3">
           <div className="workspace-sidebar">
-            <div className="panel panel-default">
-              <div className="panel-heading">
-                <h3 className="panel-title">eMind</h3>
-              </div>
-              <div className="panel-body">
-                <textarea
-                  className="form-control"
-                  rows={10}
-                  value={JSON.stringify(this.state.mindMapSpec)}
-                  onChange={this.inputChanged}
-                >
-                </textarea>
+            <textarea
+              className="form-control"
+              rows={10}
+              value={JSON.stringify(this.state.mindMapSpec)}
+              onChange={this.inputChanged}
+            >
+            </textarea>
 
-                <CTreeView
-                  style={{ width: '300px' }}
-                  data={this.state.mindMapSpec}
-                  items={(data, position) => data['children']}
-                  display={(data, position) => data['content']}
-                  initiallyExpanded={(data, position) => true}
-                  initiallySelected={(data, position) => position.join(',') === '0'}
-                />
-              </div>
-            </div>
+            <CTreeView
+              style={{ width: '300px' }}
+              data={this.state.mindMapSpec}
+              items={(data, position) => data['children']}
+              display={(data, position) => data['content']}
+              initiallyExpanded={(data, position) => true}
+              initiallySelected={(data, position) => position.join(',') === '0'}
+            />
           </div>
         </div>
         <div className="col-md-9">
