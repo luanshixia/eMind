@@ -16,6 +16,8 @@ interface WorkspaceState {
 }
 
 export default class Workspace extends React.Component<RouteComponentProps<WorkspaceProps>, WorkspaceState> {
+  tempData: any;
+
   constructor(props: RouteComponentProps<WorkspaceProps>) {
     super(props);
 
@@ -23,6 +25,10 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
       mindMapSpec: {
         content: 'Root'
       }
+    };
+
+    this.tempData = {
+      selectedNode: null
     };
 
     this.inputChanged = this.inputChanged.bind(this);
@@ -46,17 +52,28 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
   viewerClick(e: React.MouseEvent<any>) {
     if (e.target instanceof SVGRectElement) {
       const spec = getNodeDict()[e.target.id];
-      spec.cls = ['active'];
-      this.setState({
-        mindMapSpec: this.state.mindMapSpec
-      });
+      this.selectNode(this.tempData.selectedNode, spec);
     } else if (e.target instanceof SVGTextElement) {
       const spec = getNodeDict()[e.target.id.replace('-text', '')];
-      spec.cls = ['active'];
-      this.setState({
-        mindMapSpec: this.state.mindMapSpec
-      });
+      this.selectNode(this.tempData.selectedNode, spec);
+    } else {
+      this.selectNode(this.tempData.selectedNode, null);
     }
+  }
+
+  selectNode(oldNode: NodeSpec, newNode: NodeSpec | null) {
+    if (oldNode) {
+      delete oldNode.cls;
+    }
+
+    if (newNode) {
+      newNode.cls = ['active'];
+    }
+
+    this.tempData.selectedNode = newNode;
+    this.setState({
+      mindMapSpec: this.state.mindMapSpec
+    });
   }
 
   public render() {
@@ -75,7 +92,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
               <div className="panel-body">
                 <textarea
                   className="form-control"
-                  rows={5}
+                  rows={10}
                   value={JSON.stringify(this.state.mindMapSpec)}
                   onChange={this.inputChanged}
                 >

@@ -1,0 +1,8 @@
+.emind-node.active {
+  fill: azure;
+}
+
+textarea.form-control {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: smaller;
+}
