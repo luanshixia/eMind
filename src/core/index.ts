@@ -12,7 +12,16 @@ export const nodeClass = 'emind-node';
 export const linkClass = 'emind-link';
 export const textClass = 'emind-text';
 
-export function getBase62ShortID(length: number) {
+const NODE_DICT_KEY = '__emind_node_dict__';
+
+export function getNodeDict(): { [id: string]: NodeSpec } {
+  if (!window.hasOwnProperty(NODE_DICT_KEY)) {
+    (window as any)[NODE_DICT_KEY] = {};
+  }
+  return (window as any)[NODE_DICT_KEY];
+}
+
+function getBase62ShortID(length: number) {
   const base62Chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   const chars = [];
   for (let i = 0; i < length; i += 1) {
@@ -21,13 +30,26 @@ export function getBase62ShortID(length: number) {
   return chars.join('');
 }
 
+export interface NodeStyle {
+  fill: string;
+  stroke: string;
+  fontSize: number;
+  fontFamily: string;
+}
+
+export interface MapStyle {
+
+}
+
 export interface NodeSpec {
   content: string;
   children?: NodeSpec[];
+  cls?: string[];
+  styles?: NodeStyle;
 }
 
 export class Node {
-  content: string;
+  spec: NodeSpec;
   parent?: Node;
   children: Node[];
 
@@ -50,7 +72,10 @@ export class Node {
   }
 
   static fromSpecObject(specObject: NodeSpec) {
-    const node: Node = new Node(specObject.content, ...(specObject.children || []).map(child => Node.fromSpecObject(child)));
+    const node: Node = new Node(
+      specObject,
+      ...(specObject.children || []).map(child => Node.fromSpecObject(child)));
+
     node.updateAllRecursively();
     return node;
   }
@@ -60,20 +85,24 @@ export class Node {
     return Node.fromSpecObject(specObject);
   }
 
-  constructor(content: string, ...children: Node[]) {
-    this.content = content;
+  constructor(spec: NodeSpec, ...children: Node[]) {
+    this.spec = spec;
     this.children = [];
     children.forEach(node => this.addChild(node));
 
     this.id = getBase62ShortID(8);
     this.linkId = this.id + '-link';
     this.textId = this.id + '-text';
+
+    getNodeDict()[this.id] = spec;
   }
 
   toSpecObject(): NodeSpec {
     return {
-      content: this.content,
-      children: this.children.length ? this.children.map(node => node.toSpecObject()) : undefined
+      content: this.spec.content,
+      children: this.children.length
+        ? this.children.map(node => node.toSpecObject())
+        : undefined
     };
   }
 
@@ -82,7 +111,7 @@ export class Node {
   }
 
   toDebugString() {
-    return `Content=${this.content}|Width=${this.width}|Height=${this.height}|TotalHeight=${this.totalHeight}|Left=${this.left}|Top=${this.top}`;
+    return `Content=${this.spec.content}|Width=${this.width}|Height=${this.height}|TotalHeight=${this.totalHeight}|Left=${this.left}|Top=${this.top}`;
   }
 
   toSvgString() {
@@ -96,7 +125,7 @@ export class Node {
       link = `<path id="${this.linkId}" class="${linkClass}" d="M${x0} ${y0} C ${x1} ${y1}, ${x2} ${y2}, ${x} ${y}" stroke="black" fill="transparent" />`;
     }
 
-    return `<rect id="${this.id}" class="${nodeClass}" x="${this.left}" y="${this.top}" width="${this.width}" height="${this.height}" rx="${cornerRadius}" ry="${cornerRadius}" stroke="black" fill="transparent" /><text id="${this.textId}" class="${textClass}" x="${this.left + nodePadding}" y="${this.top + this.height / 2 + textHeight / 2}" text-anchor="left" font-size="${textHeight}">${this.content}</text>${link}`;
+    return `<rect id="${this.id}" class="${[nodeClass, ...(this.spec.cls || [])].join(' ')}" x="${this.left}" y="${this.top}" width="${this.width}" height="${this.height}" rx="${cornerRadius}" ry="${cornerRadius}" stroke="black" fill="transparent" /><text id="${this.textId}" class="${textClass}" x="${this.left + nodePadding}" y="${this.top + this.height / 2 + textHeight / 2}" text-anchor="left" font-size="${textHeight}">${this.spec.content}</text>${link}`;
   }
 
   isRoot() {
@@ -192,6 +221,7 @@ export class Node {
 
 export class MindMap {
   root: Node;
+  env: any;
 
   static fromSpecString(spec: string) {
     return new MindMap(Node.fromSpecString(spec));

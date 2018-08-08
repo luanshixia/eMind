@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { NodeSpec } from '../core';
+import { NodeSpec, getNodeDict } from '../core';
 import { CTreeView } from '../widgets/treeview';
 import { CViewer } from '../widgets/viewer';
 import MindMapPresenter from './MindMapPresenter';
@@ -26,6 +26,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
     };
 
     this.inputChanged = this.inputChanged.bind(this);
+    this.viewerClick = this.viewerClick.bind(this);
   }
 
   inputChanged(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -40,6 +41,22 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
     this.setState({
       mindMapSpec: spec
     });
+  }
+
+  viewerClick(e: React.MouseEvent<any>) {
+    if (e.target instanceof SVGRectElement) {
+      const spec = getNodeDict()[e.target.id];
+      spec.cls = ['active'];
+      this.setState({
+        mindMapSpec: this.state.mindMapSpec
+      });
+    } else if (e.target instanceof SVGTextElement) {
+      const spec = getNodeDict()[e.target.id.replace('-text', '')];
+      spec.cls = ['active'];
+      this.setState({
+        mindMapSpec: this.state.mindMapSpec
+      });
+    }
   }
 
   public render() {
@@ -77,13 +94,16 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
           </div>
         </div>
         <div className="col-md-9">
-        <CViewer
-          width={800}
-          height={600}
-          style={{ border: '1px solid silver' }}
-        >
-          <MindMapPresenter specObject={this.state.mindMapSpec} />
-        </CViewer>
+          <CViewer
+            width={800}
+            height={600}
+            style={{ border: '1px solid silver' }}
+          >
+            <MindMapPresenter
+              specObject={this.state.mindMapSpec}
+              onClick={this.viewerClick}
+            />
+          </CViewer>
         </div>
       </div>
     </div>
