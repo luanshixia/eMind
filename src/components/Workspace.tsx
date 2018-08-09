@@ -95,7 +95,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
               items={(data, position) => data['children']}
               display={(data, position) => data['content']}
               initiallyExpanded={(data, position) => true}
-              initiallySelected={(data, position) => position.join(',') === '0'}
+              selected={(data, position) => data === this.state.selectedNode}
             />
           </div>
         </div>

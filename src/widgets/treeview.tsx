@@ -25,6 +25,7 @@ interface CTreeViewProps extends CommonProps {
   itemClass?: (item: TreeData, position: number[]) => string;
   initiallyExpanded?: (item: TreeData, position: number[]) => boolean;
   initiallySelected?: (item: TreeData, position: number[]) => boolean;
+  selected?: (item: TreeData, position: number[]) => boolean;
   onExpansionChanged?: (item: TreeData, position: number[], expanded: boolean) => void;
   onSelectionChanged?: (item: TreeData, position: number[], previousPosition: number[]) => void;
 }
@@ -151,6 +152,16 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
   }
 
   render() {
+    if (this.props.selected) {
+      this.state.selectedNodes.length = 0;
+      walkTree(this.props.data, [0], this.props.items, (node, pos) => {
+        if (this.props.selected && this.props.selected(node, pos)) {
+          this.state.selectedNodes[0] = pos.join(',');
+        }
+      // tslint:disable-next-line:align
+      }, this.isExpanded);
+    }
+
     return (
     <PTreeView
       id={this.props.id}
