@@ -10,7 +10,6 @@ interface ListViewProps extends CommonProps {
   display: (item: TItem, i: number) => ListItemContent;
   tooltip?: (item: TItem, i: number) => string;
   itemClass?: (item: TItem, i: number) => string;
-  checked?: (item: TItem, i: number) => boolean;
   selected: (item: TItem, i: number) => boolean;
   itemClick?: (item: TItem, i: number) => void;
 }

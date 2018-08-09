@@ -83,10 +83,16 @@ export const PTreeView = (props: PTreeViewProps) => {
 };
 
 export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
+  tempData: any;
+
   constructor(props: CTreeViewProps) {
     super(props);
 
     this.state = this.initState();
+    this.tempData = {
+      data: this.props.data
+    };
+
     this.isExpanded = this.isExpanded.bind(this);
     this.isSelected = this.isSelected.bind(this);
     this.itemHandleClick = this.itemHandleClick.bind(this);
@@ -144,15 +150,18 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
 
   itemContentClick(item: TreeData, position: number[]) {
     const selectedNode = this.state.selectedNodes[0];
-    const previousSelection = selectedNode ? selectedNode.split(',').map(s => parseInt(s)) : [];
+    const previousPosition = selectedNode ? selectedNode.split(',').map(s => parseInt(s)) : [];
     this.selectNode(position);
     if (this.props.onSelectionChanged) {
-      this.props.onSelectionChanged(item, position, previousSelection);
+      this.props.onSelectionChanged(item, position, previousPosition);
     }
   }
 
   render() {
-    if (this.props.selected) {
+    if (this.props.data !== this.tempData.data) {
+      this.state = this.initState();
+      this.tempData.data = this.props.data;
+    } else if (this.props.selected) {
       this.state.selectedNodes.length = 0;
       walkTree(this.props.data, [0], this.props.items, (node, pos) => {
         if (this.props.selected && this.props.selected(node, pos)) {

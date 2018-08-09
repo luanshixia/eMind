@@ -48,18 +48,18 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
   viewerClick(e: React.MouseEvent<any>) {
     if (e.target instanceof SVGRectElement) {
       const spec = getNodeDict()[e.target.id];
-      this.selectNode(this.state.selectedNode, spec);
+      this.selectNode(spec);
     } else if (e.target instanceof SVGTextElement) {
       const spec = getNodeDict()[e.target.id.replace('-text', '')];
-      this.selectNode(this.state.selectedNode, spec);
+      this.selectNode(spec);
     } else {
-      this.selectNode(this.state.selectedNode);
+      this.selectNode();
     }
   }
 
-  selectNode(oldNode?: NodeSpec, newNode?: NodeSpec) {
-    if (oldNode) {
-      delete oldNode.cls;
+  selectNode(newNode?: NodeSpec) {
+    if (this.state.selectedNode) {
+      delete this.state.selectedNode.cls;
     }
 
     if (newNode) {
@@ -96,6 +96,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
               display={(data, position) => data['content']}
               initiallyExpanded={(data, position) => true}
               selected={(data, position) => data === this.state.selectedNode}
+              onSelectionChanged={(data, position, previousPosition) => this.selectNode(data)}
             />
           </div>
         </div>
