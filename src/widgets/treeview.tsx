@@ -15,11 +15,11 @@ interface PTreeViewProps extends CommonProps {
   selected?: (item: TreeData, position: number[]) => boolean;
   onItemHandleClick?: (item: TreeData, position: number[]) => void;
   onItemContentClick?: (item: TreeData, position: number[]) => void;
-  onKeyUp?: (event: React.KeyboardEvent<any>) => void;
-  onKeyDown?: (event: React.KeyboardEvent<any>) => void;
-  onKeyPress?: (event: React.KeyboardEvent<any>) => void;
-  onFocus?: (event: React.FocusEvent<any>) => void;
-  onBlur?: (event: React.FocusEvent<any>) => void;
+  onKeyUp?: React.KeyboardEventHandler<any>;
+  onKeyDown?: React.KeyboardEventHandler<any>;
+  onKeyPress?: React.KeyboardEventHandler<any>;
+  onFocus?: React.FocusEventHandler<any>;
+  onBlur?: React.FocusEventHandler<any>;
 }
 
 interface CTreeViewProps extends CommonProps {
@@ -34,11 +34,11 @@ interface CTreeViewProps extends CommonProps {
   selected?: (item: TreeData, position: number[]) => boolean;
   onExpansionChanged?: (item: TreeData, position: number[], expanded: boolean) => void;
   onSelectionChanged?: (item: TreeData, position: number[], previousPosition: number[]) => void;
-  onKeyUp?: (event: React.KeyboardEvent<any>) => void;
-  onKeyDown?: (event: React.KeyboardEvent<any>) => void;
-  onKeyPress?: (event: React.KeyboardEvent<any>) => void;
-  onFocus?: (event: React.FocusEvent<any>) => void;
-  onBlur?: (event: React.FocusEvent<any>) => void;
+  onKeyUp?: React.KeyboardEventHandler<any>;
+  onKeyDown?: React.KeyboardEventHandler<any>;
+  onKeyPress?: React.KeyboardEventHandler<any>;
+  onFocus?: React.FocusEventHandler<any>;
+  onBlur?: React.FocusEventHandler<any>;
 }
 
 interface CTreeViewState {
@@ -57,12 +57,18 @@ function TreeViewItem(props: TreeItemProps): JSX.Element {
     <div className="tree-item">
       <div className="tree-item-head">
         <span
-          className={classNames(['tree-item-handle', props.expanded(props.data, props.position) ? 'glyphicon glyphicon-menu-down' : 'glyphicon glyphicon-menu-right'])}
+          className={classNames([
+            'tree-item-handle',
+            props.expanded(props.data, props.position) ? 'glyphicon glyphicon-menu-down' : 'glyphicon glyphicon-menu-right'
+          ])}
           onClick={() => props.onItemHandleClick && props.onItemHandleClick(props.data, props.position)}
         >
         </span>
         <span
-          className={classNames(['tree-item-content', props.selected && props.selected(props.data, props.position) ? 'active' : ''])}
+          className={classNames([
+            'tree-item-content',
+            props.selected && props.selected(props.data, props.position) ? 'active' : ''
+          ])}
           title={props.tooltip ? props.tooltip(props.data, props.position) : undefined}
           onClick={() => props.onItemContentClick && props.onItemContentClick(props.data, props.position)}
         >
@@ -72,7 +78,12 @@ function TreeViewItem(props: TreeItemProps): JSX.Element {
       {props.items(props.data, props.position) && props.expanded(props.data, props.position) &&
       <div className="tree-item-body">
         {props.items(props.data, props.position).map((item, i) =>
-          <TreeViewItem {...itemProps} key={[...props.position, i].join(',')} data={item} position={[...props.position, i]} />)}
+          <TreeViewItem
+            {...itemProps}
+            key={[...props.position, i].join(',')}
+            data={item}
+            position={[...props.position, i]}
+          />)}
       </div>}
     </div>
   );
