@@ -83,7 +83,7 @@ export const PTreeView = (props: PTreeViewProps) => {
     <div
       id={props.id}
       className={classNames(props.cls)}
-      style={{ ...props.style, userSelect: 'none' }}
+      style={{ ...props.style, userSelect: 'none', outline: 0 }}
       tabIndex={-1}
       onKeyUp={props.onKeyUp}
       onFocus={props.onFocus}
@@ -113,6 +113,8 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
     this.isSelected = this.isSelected.bind(this);
     this.itemHandleClick = this.itemHandleClick.bind(this);
     this.itemContentClick = this.itemContentClick.bind(this);
+    this.onFocus = this.onFocus.bind(this);
+    this.onBlur = this.onBlur.bind(this);
   }
 
   initState() {
