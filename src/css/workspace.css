@@ -1,4 +1,9 @@
 .emind-node.active {
+  fill: gray;
+  stroke: gray;
+}
+
+:focus .emind-node.active {
   fill: #428bca;
   stroke: #428bca;
 }

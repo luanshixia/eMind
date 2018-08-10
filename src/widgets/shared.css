@@ -41,6 +41,11 @@ ul.border li.list-group-item {
 
 .tree-item-content.active {
   color: white;
+  background-color: gray;
+}
+
+:focus .tree-item-content.active {
+  color: white;
   background-color: #428bca;
 }
 

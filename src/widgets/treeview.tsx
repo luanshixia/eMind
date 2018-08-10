@@ -16,6 +16,8 @@ interface PTreeViewProps extends CommonProps {
   onItemHandleClick?: (item: TreeData, position: number[]) => void;
   onItemContentClick?: (item: TreeData, position: number[]) => void;
   onKeyUp?: (event: React.KeyboardEvent<any>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<any>) => void;
+  onKeyPress?: (event: React.KeyboardEvent<any>) => void;
   onFocus?: (event: React.FocusEvent<any>) => void;
   onBlur?: (event: React.FocusEvent<any>) => void;
 }
@@ -33,6 +35,8 @@ interface CTreeViewProps extends CommonProps {
   onExpansionChanged?: (item: TreeData, position: number[], expanded: boolean) => void;
   onSelectionChanged?: (item: TreeData, position: number[], previousPosition: number[]) => void;
   onKeyUp?: (event: React.KeyboardEvent<any>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<any>) => void;
+  onKeyPress?: (event: React.KeyboardEvent<any>) => void;
   onFocus?: (event: React.FocusEvent<any>) => void;
   onBlur?: (event: React.FocusEvent<any>) => void;
 }
@@ -86,6 +90,8 @@ export const PTreeView = (props: PTreeViewProps) => {
       style={{ ...props.style, userSelect: 'none', outline: 0 }}
       tabIndex={-1}
       onKeyUp={props.onKeyUp}
+      onKeyDown={props.onKeyDown}
+      onKeyPress={props.onKeyPress}
       onFocus={props.onFocus}
       onBlur={props.onBlur}
     >
@@ -235,6 +241,8 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
       onItemHandleClick={this.itemHandleClick}
       onItemContentClick={this.itemContentClick}
       onKeyUp={this.props.onKeyUp}
+      onKeyDown={this.props.onKeyDown}
+      onKeyPress={this.props.onKeyPress}
       onFocus={this.onFocus}
       onBlur={this.onBlur}
     />

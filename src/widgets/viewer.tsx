@@ -16,6 +16,11 @@ interface PViewerProps extends CommonProps {
   // onMouseDown?: React.MouseEventHandler<any>;
   // onMouseUp?: React.MouseEventHandler<any>;
   onWheel?: React.WheelEventHandler<any>;
+  onKeyUp?: React.KeyboardEventHandler<any>;
+  onKeyDown?: React.KeyboardEventHandler<any>;
+  onKeyPress?: React.KeyboardEventHandler<any>;
+  onFocus?: React.FocusEventHandler<any>;
+  onBlur?: React.FocusEventHandler<any>;
 }
 
 interface CViewerProps extends CommonProps {
@@ -23,6 +28,11 @@ interface CViewerProps extends CommonProps {
   initialScale?: number;
   width: number;
   height: number;
+  onKeyUp?: React.KeyboardEventHandler<any>;
+  onKeyDown?: React.KeyboardEventHandler<any>;
+  onKeyPress?: React.KeyboardEventHandler<any>;
+  onFocus?: React.FocusEventHandler<any>;
+  onBlur?: React.FocusEventHandler<any>;
 }
 
 interface CViewerState {
@@ -35,11 +45,24 @@ export const PViewer = (props: PViewerProps) => {
     <div
       id={props.id}
       className="viewer viewer-border"
-      style={{ ...props.style, width: props.width, height: props.height, overflow: 'hidden', userSelect: 'none' }}
+      style={{
+        ...props.style,
+        width: props.width,
+        height: props.height,
+        overflow: 'hidden',
+        userSelect: 'none',
+        outline: 0
+      }}
+      tabIndex={-1}
       onMouseMove={props.onMouseMove}
       // onMouseDown={props.onMouseDown}
       // onMouseUp={props.onMouseUp}
       onWheel={props.onWheel}
+      onKeyUp={props.onKeyUp}
+      onKeyDown={props.onKeyDown}
+      onKeyPress={props.onKeyPress}
+      onFocus={props.onFocus}
+      onBlur={props.onBlur}
     >
       <div
         id={props.id + '-content'}
@@ -126,6 +149,11 @@ export class CViewer extends React.Component<CViewerProps, CViewerState> {
       height={this.props.height}
       onMouseMove={this.updateOrigin}
       onWheel={this.updateScale}
+      onKeyUp={this.props.onKeyUp}
+      onKeyDown={this.props.onKeyDown}
+      onKeyPress={this.props.onKeyPress}
+      onFocus={this.props.onFocus}
+      onBlur={this.props.onBlur}
     >
       {this.props.children}
     </PViewer>
