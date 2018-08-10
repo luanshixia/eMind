@@ -15,6 +15,9 @@ interface PTreeViewProps extends CommonProps {
   selected?: (item: TreeData, position: number[]) => boolean;
   onItemHandleClick?: (item: TreeData, position: number[]) => void;
   onItemContentClick?: (item: TreeData, position: number[]) => void;
+  onKeyUp?: (event: React.KeyboardEvent<any>) => void;
+  onFocus?: (event: React.FocusEvent<any>) => void;
+  onBlur?: (event: React.FocusEvent<any>) => void;
 }
 
 interface CTreeViewProps extends CommonProps {
@@ -29,11 +32,15 @@ interface CTreeViewProps extends CommonProps {
   selected?: (item: TreeData, position: number[]) => boolean;
   onExpansionChanged?: (item: TreeData, position: number[], expanded: boolean) => void;
   onSelectionChanged?: (item: TreeData, position: number[], previousPosition: number[]) => void;
+  onKeyUp?: (event: React.KeyboardEvent<any>) => void;
+  onFocus?: (event: React.FocusEvent<any>) => void;
+  onBlur?: (event: React.FocusEvent<any>) => void;
 }
 
 interface CTreeViewState {
   expandedNodes: string[];
   selectedNodes: string[];
+  focused: boolean;
 }
 
 interface TreeItemProps extends PTreeViewProps {
@@ -77,6 +84,10 @@ export const PTreeView = (props: PTreeViewProps) => {
       id={props.id}
       className={classNames(props.cls)}
       style={{ ...props.style, userSelect: 'none' }}
+      tabIndex={-1}
+      onKeyUp={props.onKeyUp}
+      onFocus={props.onFocus}
+      onBlur={props.onBlur}
     >
       <TreeViewItem {...itemProps} position={[0]} />
     </div>
@@ -89,7 +100,11 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
   constructor(props: CTreeViewProps) {
     super(props);
 
-    this.state = this.initState();
+    this.state = {
+      ...this.initState(),
+      focused: false
+    };
+
     this.tempData = {
       data: this.props.data
     };
@@ -126,6 +141,28 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
     return this.state.selectedNodes[0] === position.join(',');
   }
 
+  onFocus(event: React.FocusEvent<any>) {
+    this.setState({
+      ...this.state,
+      focused: true
+    });
+
+    if (this.props.onFocus) {
+      this.props.onFocus(event);
+    }
+  }
+
+  onBlur(event: React.FocusEvent<any>) {
+    this.setState({
+      ...this.state,
+      focused: false
+    });
+
+    if (this.props.onBlur) {
+      this.props.onBlur(event);
+    }
+  }
+
   toggleExpansion(position: number[]) {
     const [array, added] = toggleArrayElement(this.state.expandedNodes, position.join(','));
     this.setState({
@@ -160,7 +197,7 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
 
   render() {
     if (this.props.data !== this.tempData.data) {
-      this.state = this.initState();
+      this.state = { ...this.state, ...this.initState() };
       this.tempData.data = this.props.data;
     } else if (this.props.selected || this.props.expanded) {
       if (this.props.selected) {
@@ -195,6 +232,9 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
       selected={this.isSelected}
       onItemHandleClick={this.itemHandleClick}
       onItemContentClick={this.itemContentClick}
+      onKeyUp={this.props.onKeyUp}
+      onFocus={this.onFocus}
+      onBlur={this.onBlur}
     />
     );
   }
