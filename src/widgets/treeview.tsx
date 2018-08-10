@@ -25,6 +25,7 @@ interface CTreeViewProps extends CommonProps {
   itemClass?: (item: TreeData, position: number[]) => string;
   initiallyExpanded?: (item: TreeData, position: number[]) => boolean;
   initiallySelected?: (item: TreeData, position: number[]) => boolean;
+  expanded?: (item: TreeData, position: number[]) => boolean;
   selected?: (item: TreeData, position: number[]) => boolean;
   onExpansionChanged?: (item: TreeData, position: number[], expanded: boolean) => void;
   onSelectionChanged?: (item: TreeData, position: number[], previousPosition: number[]) => void;
@@ -161,14 +162,25 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
     if (this.props.data !== this.tempData.data) {
       this.state = this.initState();
       this.tempData.data = this.props.data;
-    } else if (this.props.selected) {
-      this.state.selectedNodes.length = 0;
+    } else if (this.props.selected || this.props.expanded) {
+      if (this.props.selected) {
+        this.state.selectedNodes.length = 0;
+      }
+
+      if (this.props.expanded) {
+        this.state.expandedNodes.length = 0;
+      }
+
       walkTree(this.props.data, [0], this.props.items, (node, pos) => {
         if (this.props.selected && this.props.selected(node, pos)) {
           this.state.selectedNodes[0] = pos.join(',');
         }
+
+        if (this.props.expanded && this.props.expanded(node, pos)) {
+          this.state.expandedNodes.push(pos.join(','));
+        }
       // tslint:disable-next-line:align
-      }, this.isExpanded);
+      }, this.props.expanded || this.isExpanded);
     }
 
     return (
