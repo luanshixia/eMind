@@ -28,6 +28,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
 
     this.inputChanged = this.inputChanged.bind(this);
     this.viewerClick = this.viewerClick.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
 
   inputChanged(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -72,6 +73,28 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
     });
   }
 
+  onKeyDown(event: React.KeyboardEvent<any>) {
+    if (event.key === 'Enter') {
+      if (this.state.selectedNode) {
+        this.setState(this.state);
+      }
+    } else if (event.key === 'Tab') {
+      if (this.state.selectedNode) {
+        this.state.selectedNode.children = [
+          ...(this.state.selectedNode.children || []),
+          { content: 'New node' }
+        ];
+        this.setState(this.state);
+      }
+    } else if (event.key === ' ') {
+      if (this.state.selectedNode) {
+        this.setState(this.state);
+      }
+    }
+
+    event.preventDefault();
+  }
+
   public render() {
     return (
     <div>
@@ -94,9 +117,10 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
               data={this.state.mindMapSpec}
               items={(data, position) => data['children']}
               display={(data, position) => data['content']}
-              initiallyExpanded={(data, position) => true}
+              expanded={(data, position) => true}
               selected={(data, position) => data === this.state.selectedNode}
-              onSelectionChanged={(data, position, previousPosition) => this.selectNode(data)}
+              onSelectionChanged={(data, position) => this.selectNode(data)}
+              onKeyDown={this.onKeyDown}
             />
           </div>
         </div>
@@ -105,6 +129,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
             width={800}
             height={600}
             style={{ border: '1px solid silver' }}
+            onKeyDown={this.onKeyDown}
           >
             <MindMapPresenter
               specObject={this.state.mindMapSpec}
