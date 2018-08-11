@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { NodeSpec, getNodeDict } from '../core';
+import { NodeSpec as MindMapNodeSpec, getNodeDict } from '../core';
 import { CTreeView } from '../widgets/treeview';
 import { CViewer } from '../widgets/viewer';
 import MindMapPresenter from './MindMapPresenter';
@@ -14,6 +14,11 @@ interface WorkspaceProps {
 interface WorkspaceState {
   mindMapSpec: NodeSpec;
   selectedNode?: NodeSpec;
+}
+
+interface NodeSpec extends MindMapNodeSpec {
+  children?: NodeSpec[];
+  collapsed?: boolean;
 }
 
 export default class Workspace extends React.Component<RouteComponentProps<WorkspaceProps>, WorkspaceState> {
@@ -117,9 +122,10 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
               data={this.state.mindMapSpec}
               items={(data, position) => data['children']}
               display={(data, position) => data['content']}
-              expanded={(data, position) => true}
+              expanded={(data, position) => !data.collapsed}
               selected={(data, position) => data === this.state.selectedNode}
               onSelectionChanged={(data, position) => this.selectNode(data)}
+              onExpansionChanged={(data, position, expanded) => data.collapsed = !expanded}
               onKeyDown={this.onKeyDown}
             />
           </div>

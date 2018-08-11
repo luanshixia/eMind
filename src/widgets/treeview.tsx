@@ -34,6 +34,7 @@ interface CTreeViewProps extends CommonProps {
   selected?: (item: TreeData, position: number[]) => boolean;
   onExpansionChanged?: (item: TreeData, position: number[], expanded: boolean) => void;
   onSelectionChanged?: (item: TreeData, position: number[]) => void;
+  onDataChanged?: () => void;
   onKeyUp?: React.KeyboardEventHandler<any>;
   onKeyDown?: React.KeyboardEventHandler<any>;
   onKeyPress?: React.KeyboardEventHandler<any>;
@@ -217,6 +218,9 @@ export class CTreeView extends React.Component<CTreeViewProps, CTreeViewState> {
     if (this.props.data !== this.tempData.data) {
       this.state = { ...this.state, ...this.initState() };
       this.tempData.data = this.props.data;
+      if (this.props.onDataChanged) {
+        this.props.onDataChanged();
+      }
     } else if (this.props.selected || this.props.expanded) {
       if (this.props.selected) {
         this.state.selectedNodes.length = 0;
