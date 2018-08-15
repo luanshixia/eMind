@@ -5,6 +5,7 @@ import ListView from '../widgets/listview';
 import { PTreeView, CTreeView } from '../widgets/treeview';
 import { Table, Column } from '../widgets/table';
 import { CViewer } from '../widgets/viewer';
+import { PrimaryButton } from '../widgets/button';
 
 interface WidgetsState {
   listView1SelectedIndex: number;
@@ -92,6 +93,10 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
       <h1>Widgest</h1>
       <p>Widgets gallery.</p>
 
+      <h2>Button</h2>
+      <p>Basic Button.</p>
+      <PrimaryButton>Click me!</PrimaryButton>
+
       <h2>ListView</h2>
       <p>Basic ListView.</p>
       <ListView
@@ -100,7 +105,7 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
         display={(item, i) => item}
         tooltip={(item, i) => item}
         selected={(item, i) => i === this.state.listView1SelectedIndex}
-        itemClick={(item, i) => this.setState({ ...this.state, listView1SelectedIndex: i })}
+        onItemClick={(item, i) => this.setState({ ...this.state, listView1SelectedIndex: i })}
       />
 
       <p>ListView with vertical scroll.</p>
@@ -111,7 +116,7 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
         display={(item, i) => item}
         tooltip={(item, i) => item}
         selected={(item, i) => i === this.state.listView2SelectedIndex}
-        itemClick={(item, i) => this.setState({ ...this.state, listView2SelectedIndex: i })}
+        onItemClick={(item, i) => this.setState({ ...this.state, listView2SelectedIndex: i })}
       />
 
       <p>ListView with custom item template.</p>
@@ -121,7 +126,7 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
         display={(item, i) => <IconShowcase name={item} />}
         tooltip={(item, i) => item}
         selected={(item, i) => i === this.state.listView3SelectedIndex}
-        itemClick={(item, i) => this.setState({ ...this.state, listView3SelectedIndex: i })}
+        onItemClick={(item, i) => this.setState({ ...this.state, listView3SelectedIndex: i })}
       />
 
       <h2>TreeView</h2>

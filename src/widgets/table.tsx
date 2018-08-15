@@ -8,7 +8,7 @@ type TableCellContent = string | number | React.Component | JSX.Element;
 interface TableProps extends CommonProps {
   rows: TRow[];
   rowClass?: (row: TRow, i: number) => string;
-  cellClick?: (row: TRow, i: number, j: number) => void;
+  onCellClick?: (row: TRow, i: number, j: number) => void;
   headerRowClass?: string;
   children: any[];
 }
@@ -22,7 +22,7 @@ interface TableColumnProps extends CommonProps {
   tooltip?: (row: TRow, i: number) => string;
 }
 
-export const Table = ({ id, cls, style, children, rows, rowClass, cellClick, headerRowClass }: TableProps) => {
+export const Table = ({ id, cls, style, children, rows, rowClass, onCellClick, headerRowClass }: TableProps) => {
   const columns = children || [];
   const showHeader = columns.some(col => col.props.header);
   return (

@@ -11,10 +11,10 @@ interface ListViewProps extends CommonProps {
   tooltip?: (item: TItem, i: number) => string;
   itemClass?: (item: TItem, i: number) => string;
   selected: (item: TItem, i: number) => boolean;
-  itemClick?: (item: TItem, i: number) => void;
+  onItemClick?: (item: TItem, i: number) => void;
 }
 
-const ListView = ({ id, cls, style, items, display, tooltip, itemClass, selected, itemClick }: ListViewProps) => {
+const ListView = ({ id, cls, style, items, display, tooltip, itemClass, selected, onItemClick }: ListViewProps) => {
   return (
     <ul
       id={id}
@@ -26,7 +26,7 @@ const ListView = ({ id, cls, style, items, display, tooltip, itemClass, selected
           key={i}
           className={classNames(itemClass ? itemClass(item, i) : '', 'list-group-item', { 'active': selected(item, i) })}
           title={tooltip ? tooltip(item, i) : undefined}
-          onClick={() => itemClick && itemClick(item, i)}
+          onClick={() => onItemClick && onItemClick(item, i)}
         >
           {display(item, i)}
         </li>)}

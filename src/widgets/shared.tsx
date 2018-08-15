@@ -3,6 +3,8 @@ export interface CommonProps {
   cls?: string[];
   style?: { [key: string]: string };
   children?: any;
+  onClick?: React.MouseEventHandler<any>;
+  onDoubleClick?: React.MouseEventHandler<any>;
 }
 
 type ClassNamesArgument = string | string[] | { [key: string]: boolean } | undefined;
