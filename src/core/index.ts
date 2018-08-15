@@ -13,12 +13,20 @@ export const linkClass = 'emind-link';
 export const textClass = 'emind-text';
 
 const NODE_DICT_KEY = '__emind_node_dict__';
+const PARENT_DICT_KEY = '__emind_parent_dict__';
 
 export function getNodeDict(): { [id: string]: NodeSpec } {
   if (!window.hasOwnProperty(NODE_DICT_KEY)) {
     (window as any)[NODE_DICT_KEY] = {};
   }
   return (window as any)[NODE_DICT_KEY];
+}
+
+export function getParentDict(): Map<NodeSpec, NodeSpec> {
+  if (!window.hasOwnProperty(PARENT_DICT_KEY)) {
+    (window as any)[PARENT_DICT_KEY] = new Map();
+  }
+  return (window as any)[PARENT_DICT_KEY];
 }
 
 function getBase62ShortID(length: number) {
@@ -138,6 +146,7 @@ export class Node {
 
   addChild(node: Node) {
     node.parent = this;
+    getParentDict().set(node.spec, this.spec);
     this.children.push(node);
   }
 

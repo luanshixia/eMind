@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { NodeSpec as MindMapNodeSpec, getNodeDict } from '../core';
+import { NodeSpec as MindMapNodeSpec, getNodeDict, getParentDict } from '../core';
 import { CTreeView } from '../widgets/treeview';
 import { CViewer } from '../widgets/viewer';
 import MindMapPresenter from './MindMapPresenter';
@@ -81,6 +81,23 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
   onKeyDown(event: React.KeyboardEvent<any>) {
     if (event.key === 'Enter') {
       if (this.state.selectedNode) {
+        const current = this.state.selectedNode;
+        const parent = getParentDict().get(current);
+        if (parent) {
+          const siblings = parent.children as MindMapNodeSpec[];
+          const index = siblings.indexOf(current);
+          parent.children = [
+            ...siblings.slice(0, index + 1),
+            { content: 'New node' },
+            ...siblings.slice(index + 1, siblings.length),
+          ];
+        } else {
+          current.children = [
+            ...(current.children || []),
+            { content: 'New node' }
+          ];
+        }
+
         this.setState(this.state);
       }
     } else if (event.key === 'Tab') {
