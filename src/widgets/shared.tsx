@@ -45,3 +45,12 @@ export function walkTree<T>(
     (children(root, rootPosision) || []).forEach((node, i) => walkTree(node, [...rootPosision, i], children, action, proceed));
   }
 }
+
+const ENV_DICT_KEY = '__react_data_controls_env_dict__';
+
+export function getEnvDict(): { [id: string]: any } {
+  if (!window.hasOwnProperty(ENV_DICT_KEY)) {
+    (window as any)[ENV_DICT_KEY] = {};
+  }
+  return (window as any)[ENV_DICT_KEY];
+}
