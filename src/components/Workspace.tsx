@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { NodeSpec as MindMapNodeSpec, getNodeDict, getParentDict } from '../core';
 import { CTreeView } from '../widgets/treeview';
 import { CViewer } from '../widgets/viewer';
+import { InputDialog } from '../widgets/dialog';
 import MindMapPresenter from './MindMapPresenter';
 import '../css/workspace.css';
 
@@ -14,6 +15,7 @@ interface WorkspaceProps {
 interface WorkspaceState {
   mindMapSpec: NodeSpec;
   selectedNode?: NodeSpec;
+  isEditingNode: boolean;
 }
 
 interface NodeSpec extends MindMapNodeSpec {
@@ -28,12 +30,15 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
     this.state = {
       mindMapSpec: {
         content: 'Root'
-      }
+      },
+      isEditingNode: false
     };
 
     this.inputChanged = this.inputChanged.bind(this);
     this.viewerClick = this.viewerClick.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
+    this.editNode = this.editNode.bind(this);
+    this.doneEditingNode = this.doneEditingNode.bind(this);
   }
 
   inputChanged(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -46,6 +51,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
     }
 
     this.setState({
+      ...this.state,
       mindMapSpec: spec,
       selectedNode: spec
     });
@@ -73,6 +79,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
     }
 
     this.setState({
+      ...this.state,
       mindMapSpec: this.state.mindMapSpec,
       selectedNode: newNode
     });
@@ -110,11 +117,25 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
       }
     } else if (event.key === ' ') {
       if (this.state.selectedNode) {
-        this.setState(this.state);
+        this.setState({
+          ...this.state,
+          isEditingNode: true
+        });
       }
     }
 
     event.preventDefault();
+  }
+
+  editNode(event: React.ChangeEvent<HTMLInputElement>) {
+    (this.state.selectedNode as NodeSpec).content = event.target.value;
+  }
+
+  doneEditingNode() {
+    this.setState({
+      ...this.state,
+      isEditingNode: false
+    });
   }
 
   public render() {
@@ -161,6 +182,15 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
           </CViewer>
         </div>
       </div>
+
+      <InputDialog
+        title="Edit node"
+        isOpen={this.state.isEditingNode}
+        value={this.state.selectedNode ? this.state.selectedNode.content : ''}
+        onChange={this.editNode}
+        onClose={this.doneEditingNode}
+      >
+      </InputDialog>
     </div>
     );
   }

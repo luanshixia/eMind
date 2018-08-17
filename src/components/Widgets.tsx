@@ -5,7 +5,8 @@ import ListView from '../widgets/listview';
 import { PTreeView, CTreeView } from '../widgets/treeview';
 import { Table, Column } from '../widgets/table';
 import { CViewer } from '../widgets/viewer';
-import { PrimaryButton } from '../widgets/button';
+import { Button, PrimaryButton } from '../widgets/button';
+import { Dialog, InputDialog } from '../widgets/dialog';
 
 interface WidgetsState {
   listView1SelectedIndex: number;
@@ -15,6 +16,7 @@ interface WidgetsState {
   treeView2ExpandedNodes: string[];
   treeView1SelectedNode: string;
   treeView2SelectedNode: string;
+  isDialogOpen: boolean;
 }
 
 interface IconShowcaseProps {
@@ -33,6 +35,7 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
       treeView2ExpandedNodes: ['0'],
       treeView1SelectedNode: '',
       treeView2SelectedNode: '',
+      isDialogOpen: false
     };
   }
 
@@ -96,6 +99,15 @@ export default class Widgets extends React.Component<RouteComponentProps<{}>, Wi
       <h2>Button</h2>
       <p>Basic Button.</p>
       <PrimaryButton>Click me!</PrimaryButton>
+      <Button onClick={() => this.setState({ ...this.state, isDialogOpen: true })}>Open dialog</Button>
+
+      <Dialog
+        title="My dialog"
+        isOpen={this.state.isDialogOpen}
+        onClose={() => this.setState({ ...this.state, isDialogOpen: false })}
+      >
+        Hello!
+      </Dialog>
 
       <h2>ListView</h2>
       <p>Basic ListView.</p>
