@@ -4,7 +4,7 @@ import { NodeSpec as MindMapNodeSpec, getNodeDict, getParentDict } from '../core
 import { CTreeView } from '../widgets/treeview';
 import { CViewer } from '../widgets/viewer';
 import { InputDialog } from '../widgets/dialog';
-import { SaveAs } from '../widgets/file';
+import { SaveAs, Open } from '../widgets/file';
 import MindMapPresenter from './MindMapPresenter';
 import '../css/workspace.css';
 
@@ -42,16 +42,15 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
       editNodeValue: ''
     };
 
-    this.inputChanged = this.inputChanged.bind(this);
     this.viewerClick = this.viewerClick.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.editNode = this.editNode.bind(this);
     this.doneEditingNode = this.doneEditingNode.bind(this);
     this.cancelEditingNode = this.cancelEditingNode.bind(this);
+    this.openFile = this.openFile.bind(this);
   }
 
-  inputChanged(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    const input = e.target.value;
+  setSpecString(input: string) {
     let spec = this.state.mindMapSpec;
     try {
       spec = JSON.parse(input);
@@ -162,6 +161,17 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
     });
   }
 
+  openFile(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = e => {
+        this.setSpecString((e.target as any).result);
+      };
+      reader.readAsText(file);
+    }
+  }
+
   public render() {
     return (
     <div>
@@ -175,11 +185,12 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
               className="form-control"
               rows={10}
               value={JSON.stringify(this.state.mindMapSpec)}
-              onChange={this.inputChanged}
+              onChange={e => this.setSpecString(e.target.value)}
             >
             </textarea>
 
             <SaveAs data={JSON.stringify(this.state.mindMapSpec)} type="image/svg+xml" fileName="mindmap.svg"></SaveAs>
+            <Open filter=".svg" onLoad={this.openFile}></Open>
 
             <CTreeView
               style={{ width: '300px' }}
