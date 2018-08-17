@@ -48,34 +48,12 @@ export const Dialog = (props: DialogProps) => {
   );
 };
 
-export const Dialog1 = (props: DialogProps) => {
-  return (
-    <div className="dialog" style={{ display: !props.isOpen ? 'none' : undefined }}>
-      <div className="panel panel-default">
-        <div className="panel-heading">
-          <button type="button" className="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 className="dialog-title">{props.title}</h4>
-        </div>
-        <div className="panel-body">
-          {props.children}
-        </div>
-        <div className="panel-footer">
-          <button type="button" className="btn btn-default" onClick={props.onClose}>Cancel</button>
-          <button type="button" className="btn btn-primary" onClick={props.onClose}>OK</button>
-        </div>
-      </div>
-      <div className="dialog-mask"></div>
-    </div>
-  );
-};
-
 export const InputDialog = (props: InputDialogProps) => {
   return (
     <Dialog
       title={props.title}
       isOpen={props.isOpen}
+      onOk={props.onOk}
       onClose={props.onClose}
     >
       {props.description && <p>{props.description}</p>}

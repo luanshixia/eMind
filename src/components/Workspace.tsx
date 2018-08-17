@@ -16,6 +16,7 @@ interface WorkspaceState {
   mindMapSpec: NodeSpec;
   selectedNode?: NodeSpec;
   isEditingNode: boolean;
+  editNodeValue: string;
 }
 
 interface NodeSpec extends MindMapNodeSpec {
@@ -24,14 +25,20 @@ interface NodeSpec extends MindMapNodeSpec {
 }
 
 export default class Workspace extends React.Component<RouteComponentProps<WorkspaceProps>, WorkspaceState> {
+
+  tempData: any;
+
   constructor(props: RouteComponentProps<WorkspaceProps>) {
     super(props);
+
+    this.tempData = {};
 
     this.state = {
       mindMapSpec: {
         content: 'Root'
       },
-      isEditingNode: false
+      isEditingNode: false,
+      editNodeValue: ''
     };
 
     this.inputChanged = this.inputChanged.bind(this);
@@ -39,6 +46,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
     this.onKeyDown = this.onKeyDown.bind(this);
     this.editNode = this.editNode.bind(this);
     this.doneEditingNode = this.doneEditingNode.bind(this);
+    this.cancelEditingNode = this.cancelEditingNode.bind(this);
   }
 
   inputChanged(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -119,7 +127,8 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
       if (this.state.selectedNode) {
         this.setState({
           ...this.state,
-          isEditingNode: true
+          isEditingNode: true,
+          editNodeValue: this.state.selectedNode.content
         });
       }
     }
@@ -128,10 +137,24 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
   }
 
   editNode(event: React.ChangeEvent<HTMLInputElement>) {
-    (this.state.selectedNode as NodeSpec).content = event.target.value;
+    this.setState({
+      ...this.state,
+      editNodeValue: event.target.value
+    });
   }
 
   doneEditingNode() {
+    if (this.state.editNodeValue) {
+      (this.state.selectedNode as NodeSpec).content = this.state.editNodeValue;
+    }
+
+    this.setState({
+      ...this.state,
+      isEditingNode: false
+    });
+  }
+
+  cancelEditingNode() {
     this.setState({
       ...this.state,
       isEditingNode: false
@@ -186,9 +209,10 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
       <InputDialog
         title="Edit node"
         isOpen={this.state.isEditingNode}
-        value={this.state.selectedNode ? this.state.selectedNode.content : ''}
+        value={this.state.editNodeValue}
         onChange={this.editNode}
-        onClose={this.doneEditingNode}
+        onOk={this.doneEditingNode}
+        onClose={this.cancelEditingNode}
       >
       </InputDialog>
     </div>
