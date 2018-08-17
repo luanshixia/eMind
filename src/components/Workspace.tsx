@@ -4,7 +4,7 @@ import { NodeSpec as MindMapNodeSpec, getNodeDict, getParentDict } from '../core
 import { CTreeView } from '../widgets/treeview';
 import { CViewer } from '../widgets/viewer';
 import { InputDialog } from '../widgets/dialog';
-import { SaveAs } from '../widgets/saveas';
+import { SaveAs } from '../widgets/file';
 import MindMapPresenter from './MindMapPresenter';
 import '../css/workspace.css';
 
