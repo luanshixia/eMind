@@ -119,7 +119,9 @@ export class Node {
   }
 
   toDebugString() {
-    return `Content=${this.spec.content}|Width=${this.width}|Height=${this.height}|TotalHeight=${this.totalHeight}|Left=${this.left}|Top=${this.top}`;
+    return `Content=${this.spec.content}|Width=${this.width}`
+      + `|Height=${this.height}|TotalHeight=${this.totalHeight}`
+      + `|Left=${this.left}|Top=${this.top}`;
   }
 
   toSvgString() {
@@ -130,10 +132,17 @@ export class Node {
       const [x, y] = [parent.right, parent.top + parent.height / 2];
       const [x1, y1] = [this.left - cpOffset, this.top + this.height / 2];
       const [x2, y2] = [parent.right + cpOffset, parent.top + parent.height / 2];
-      link = `<path id="${this.linkId}" class="${linkClass}" d="M${x0} ${y0} C ${x1} ${y1}, ${x2} ${y2}, ${x} ${y}" stroke="black" fill="transparent" />`;
+      link = `<path id="${this.linkId}" class="${linkClass}" `
+       + `d="M${x0} ${y0} C ${x1} ${y1}, ${x2} ${y2}, ${x} ${y}" `
+       + `stroke="black" fill="transparent" />`;
     }
 
-    return `<rect id="${this.id}" class="${[nodeClass, ...(this.spec.cls || [])].join(' ')}" x="${this.left}" y="${this.top}" width="${this.width}" height="${this.height}" rx="${cornerRadius}" ry="${cornerRadius}" stroke="black" fill="transparent" /><text id="${this.textId}" class="${textClass}" x="${this.left + nodePadding}" y="${this.top + this.height / 2 + textHeight / 2}" text-anchor="left" font-size="${textHeight}">${this.spec.content}</text>${link}`;
+    return `<rect id="${this.id}" class="${[nodeClass, ...(this.spec.cls || [])].join(' ')}" `
+      + `x="${this.left}" y="${this.top}" width="${this.width}" height="${this.height}" `
+      + `rx="${cornerRadius}" ry="${cornerRadius}" stroke="black" fill="transparent" />`
+      + `<text id="${this.textId}" class="${textClass}" `
+      + `x="${this.left + nodePadding}" y="${this.top + this.height / 2 + textHeight / 2}" `
+      + `text-anchor="left" font-size="${textHeight}">${this.spec.content}</text>${link}`;
   }
 
   isRoot() {
@@ -211,7 +220,8 @@ export class Node {
 
   updateChildrenTopsRecursively() {
     if (this.children.length > 0) {
-      let acumuTop = this.top + this.height / 2 - this.totalHeight / 2 + this.children[0].totalHeight / 2 - this.children[0].height / 2;
+      let acumuTop = this.top + this.height / 2 - this.totalHeight / 2
+        + this.children[0].totalHeight / 2 - this.children[0].height / 2;
 
       for (let i = 0; i < this.children.length; i++) {
         const node = this.children[i];
@@ -220,7 +230,8 @@ export class Node {
 
         if (i < this.children.length - 1) {
           const next = this.children[i + 1];
-          acumuTop += node.totalHeight / 2 + next.totalHeight / 2 + node.height / 2 - next.height / 2;
+          acumuTop += node.totalHeight / 2 + next.totalHeight / 2
+            + node.height / 2 - next.height / 2;
           acumuTop += vMargin;
         }
       }
@@ -251,13 +262,18 @@ export class MindMap {
     });
 
     let [left, top, right, bottom] = this.getBoundingBox();
-    [left, top, right, bottom] = [left - mapPadding, top - mapPadding, right + mapPadding, bottom + mapPadding];
+    [left, top, right, bottom] = [left - mapPadding, top - mapPadding,
+      right + mapPadding, bottom + mapPadding];
 
-    return `<svg width="${right - left}" height="${bottom - top}" viewBox="${left} ${top} ${right - left} ${bottom - top}" xmlns="http://www.w3.org/2000/svg">${content}</svg>`;
+    return `<svg width="${right - left}" height="${bottom - top}" `
+      + `viewBox="${left} ${top} ${right - left} ${bottom - top}" `
+      + `xmlns="http://www.w3.org/2000/svg">${content}</svg>`;
   }
 
   getBoundingBox() {
-    let [left, top, right, bottom] = [this.root.left, this.root.top, this.root.right, this.root.bottom];
+    let [left, top, right, bottom] = [this.root.left, this.root.top,
+      this.root.right, this.root.bottom];
+
     this.root.walk((node: Node) => {
       left = Math.min(left, node.left);
       top = Math.min(top, node.top);
