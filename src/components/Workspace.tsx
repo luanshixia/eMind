@@ -124,16 +124,20 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
         this.setState(this.state);
       }
     } else if (event.key === ' ') {
-      if (this.state.selectedNode) {
-        this.setState({
-          ...this.state,
-          isEditingNode: true,
-          editNodeValue: this.state.selectedNode.content
-        });
-      }
+      this.startEditingNode();
     }
 
     event.preventDefault();
+  }
+
+  startEditingNode() {
+    if (this.state.selectedNode) {
+      this.setState({
+        ...this.state,
+        isEditingNode: true,
+        editNodeValue: this.state.selectedNode.content
+      });
+    }
   }
 
   editNode(event: React.ChangeEvent<HTMLInputElement>) {
@@ -212,6 +216,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
             height={600}
             style={{ border: '1px solid silver' }}
             onKeyDown={this.onKeyDown}
+            onDoubleClick={() => this.startEditingNode()}
           >
             <MindMapPresenter
               specObject={this.state.mindMapSpec}

@@ -5,6 +5,19 @@ export interface CommonProps {
   children?: any;
   onClick?: React.MouseEventHandler<any>;
   onDoubleClick?: React.MouseEventHandler<any>;
+  onMouseMove?: React.MouseEventHandler<any>;
+  onMouseDown?: React.MouseEventHandler<any>;
+  onMouseUp?: React.MouseEventHandler<any>;
+  onMouseEnter?: React.MouseEventHandler<any>;
+  onMouseLeave?: React.MouseEventHandler<any>;
+  onMouseOver?: React.MouseEventHandler<any>;
+  onMouseOut?: React.MouseEventHandler<any>;
+  onWheel?: React.WheelEventHandler<any>;
+  onKeyDown?: React.KeyboardEventHandler<any>;
+  onKeyUp?: React.KeyboardEventHandler<any>;
+  onKeyPress?: React.KeyboardEventHandler<any>;
+  onFocus?: React.FocusEventHandler<any>;
+  onBlur?: React.FocusEventHandler<any>;
 }
 
 type ClassNamesArgument = string | string[] | { [key: string]: boolean } | undefined;

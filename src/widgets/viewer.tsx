@@ -12,15 +12,6 @@ interface PViewerProps extends CommonProps {
   scale: number;
   width: number;
   height: number;
-  onMouseMove?: React.MouseEventHandler<any>;
-  // onMouseDown?: React.MouseEventHandler<any>;
-  // onMouseUp?: React.MouseEventHandler<any>;
-  onWheel?: React.WheelEventHandler<any>;
-  onKeyUp?: React.KeyboardEventHandler<any>;
-  onKeyDown?: React.KeyboardEventHandler<any>;
-  onKeyPress?: React.KeyboardEventHandler<any>;
-  onFocus?: React.FocusEventHandler<any>;
-  onBlur?: React.FocusEventHandler<any>;
 }
 
 interface CViewerProps extends CommonProps {
@@ -28,11 +19,6 @@ interface CViewerProps extends CommonProps {
   initialScale?: number;
   width: number;
   height: number;
-  onKeyUp?: React.KeyboardEventHandler<any>;
-  onKeyDown?: React.KeyboardEventHandler<any>;
-  onKeyPress?: React.KeyboardEventHandler<any>;
-  onFocus?: React.FocusEventHandler<any>;
-  onBlur?: React.FocusEventHandler<any>;
 }
 
 interface CViewerState {
@@ -54,12 +40,18 @@ export const PViewer = (props: PViewerProps) => {
         outline: 0
       }}
       tabIndex={-1}
+      onClick={props.onClick}
+      onDoubleClick={props.onDoubleClick}
       onMouseMove={props.onMouseMove}
-      // onMouseDown={props.onMouseDown}
-      // onMouseUp={props.onMouseUp}
+      onMouseDown={props.onMouseDown}
+      onMouseUp={props.onMouseUp}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
+      onMouseOver={props.onMouseOver}
+      onMouseOut={props.onMouseOut}
       onWheel={props.onWheel}
-      onKeyUp={props.onKeyUp}
       onKeyDown={props.onKeyDown}
+      onKeyUp={props.onKeyUp}
       onKeyPress={props.onKeyPress}
       onFocus={props.onFocus}
       onBlur={props.onBlur}
@@ -95,9 +87,6 @@ export class CViewer extends React.Component<CViewerProps, CViewerState> {
       origin: props.initialOrigin || { x: 0, y: 0},
       scale: props.initialScale || 1
     };
-
-    this.updateOrigin = this.updateOrigin.bind(this);
-    this.updateScale = this.updateScale.bind(this);
   }
 
   updateOrigin(e: React.MouseEvent<any>) {
@@ -147,10 +136,28 @@ export class CViewer extends React.Component<CViewerProps, CViewerState> {
       scale={this.state.scale}
       width={this.props.width}
       height={this.props.height}
-      onMouseMove={this.updateOrigin}
-      onWheel={this.updateScale}
-      onKeyUp={this.props.onKeyUp}
+      onClick={this.props.onClick}
+      onDoubleClick={this.props.onDoubleClick}
+      onMouseMove={event => {
+        this.updateOrigin(event);
+        if (this.props.onMouseMove) {
+          this.props.onMouseMove(event);
+        }
+      }}
+      onMouseDown={this.props.onMouseDown}
+      onMouseUp={this.props.onMouseUp}
+      onMouseEnter={this.props.onMouseEnter}
+      onMouseLeave={this.props.onMouseLeave}
+      onMouseOver={this.props.onMouseOver}
+      onMouseOut={this.props.onMouseOut}
+      onWheel={event => {
+        this.updateScale(event);
+        if (this.props.onWheel) {
+          this.props.onWheel(event);
+        }
+      }}
       onKeyDown={this.props.onKeyDown}
+      onKeyUp={this.props.onKeyUp}
       onKeyPress={this.props.onKeyPress}
       onFocus={this.props.onFocus}
       onBlur={this.props.onBlur}
