@@ -142,7 +142,7 @@ export class Node {
       + `rx="${cornerRadius}" ry="${cornerRadius}" stroke="black" fill="transparent" />`
       + `<text id="${this.textId}" class="${textClass}" `
       + `x="${this.left + nodePadding}" y="${this.top + this.height / 2 + textHeight / 2}" `
-      + `text-anchor="left" font-size="${textHeight}">${this.spec.content}</text>${link}`;
+      + `text-anchor="start" font-size="${textHeight}">${this.spec.content}</text>${link}`;
   }
 
   isRoot() {

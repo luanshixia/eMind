@@ -189,8 +189,9 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
             >
             </textarea>
 
-            <SaveAs data={JSON.stringify(this.state.mindMapSpec)} type="image/svg+xml" fileName="mindmap.svg"></SaveAs>
-            <Open filter=".svg" onLoad={this.openFile}></Open>
+            <Open buttonContent="Open" filter=".emind" onLoad={this.openFile}></Open>
+            <SaveAs buttonContent="Save" data={JSON.stringify(this.state.mindMapSpec)} type="application/json" fileName="mindmap.emind"></SaveAs>
+            <SaveAs buttonContent="Export SVG" data={this.tempData.svg} type="image/svg+xml" fileName="mindmap.svg"></SaveAs>
 
             <CTreeView
               style={{ width: '300px' }}
@@ -215,6 +216,7 @@ export default class Workspace extends React.Component<RouteComponentProps<Works
             <MindMapPresenter
               specObject={this.state.mindMapSpec}
               onClick={this.viewerClick}
+              onGetSvg={svg => this.tempData.svg = svg}
             />
           </CViewer>
         </div>
